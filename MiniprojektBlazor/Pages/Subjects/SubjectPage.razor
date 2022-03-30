@@ -1,0 +1,98 @@
+﻿@page "/subjects/{SubjectId:int}/"
+
+@inject HttpClient http
+@inject AppDataService service
+
+@if (subject is null) {
+	<PageTitle>Emne</PageTitle>
+} else {
+	<PageTitle>Emne - @subject.Name</PageTitle>
+}
+
+<div class="d-flex">
+	<h1 class="flex-grow-1 flex-shrink-1">
+		@if (subject is not null)
+			@subject.Name
+	</h1>
+	<AskQuestionPrompt />
+</div>
+
+<p>Liste over emner</p>
+
+@if (questions is null)
+{
+	<p>Indlæser...</p>
+}
+else if (questions.Length < 1)
+{
+	<p>Ingen spørgsmål i denne kategori.</p>
+}
+else
+{
+	@foreach (var question in questions)
+	{
+		<div class="card-group">
+			<div class="card bg-light mb-1">
+				<div class="card-header">
+					<div class="card-summary d-flex w-auto gap-2">
+						<div class="d-inline-flex gap-1">
+							<span class="mr-1">@question.GetScore()</span>
+							<span>stemmer</span>
+						</div>
+						<div style="color: #6a737c">
+							<span></span>
+							<span></span>
+						</div>
+					</div>
+				</div>
+				<div class="card-body">
+					<div style="float: left">
+						<h5 class="card-title fw-normal fs-5">
+							<a class="text-decoration-none" href="/questions/@question.Id/">
+								@question.Title
+							</a>
+						</h5>
+						<p class="card-text fw-mormal fs-6">
+							@question.Text
+						</p>
+					</div>
+					<div style="display: flex;align-items: center;flex-direction: column; float: right;">
+					</div>
+				</div>
+				<div class="card-footer d-flex justify-content-between">
+					<div class="p-1 m-0 lh-1" style="color: #39739d; background-color: #e1ecf4">
+						@question.Subject.Name
+					</div>
+					<div class="card-user d-flex gap-1">
+						<div class="card-user--info">
+							<p class="card-text flex-row">
+								@question.Username
+							</p>
+						</div>
+						<time class="card-user--time">
+							<span>spurgte</span>
+							<span title="@question.Date" class="relativetime">
+								@(service.GetPrettyDate(@question.Date))
+							</span>
+						</time>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
+
+@code {
+	[Parameter]
+	public int SubjectId { get; set; }
+
+	private SubjectData subject;
+	private QuestionData[]? questions;
+
+	protected override async Task OnInitializedAsync()
+	{
+		subject = await service.GetSubjectById(SubjectId);
+		questions = await service.GetQuestionsBySubjectId(SubjectId);
+	}
+
+}

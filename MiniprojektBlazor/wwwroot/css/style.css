@@ -1,0 +1,57 @@
+﻿.vote-body {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    float: right;
+    color: #babfc4;
+}
+
+.btn-vote {
+    color: unset;
+    background: none;
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+    .btn-vote:focus, :focus-visible {
+        outline: unset;
+        box-shadow: unset;
+    }
+
+    .btn-vote.up:hover {
+        color: #00bd3f;
+    }
+
+    .btn-vote.down:hover {
+        color: #bd2d00;
+    }
+
+.card-answer {
+    background-color: #00000008;
+    margin: 1rem 0 0 -1rem;
+    border-radius: 0px;
+    padding: 0.5rem;
+}
+
+@media (min-width: 576px) {
+    .card-columns {
+        -webkit-column-count: 3;
+        -moz-column-count: 3;
+        column-count: 3;
+        -webkit-column-gap: 1.25rem;
+        -moz-column-gap: 1.25rem;
+        column-gap: 1.25rem;
+    }
+}
+
+.card-columns .card {
+    margin-bottom: 0.75rem;
+}
+
+@media (min-width: 576px) {
+    .card-columns .card {
+        display: inline-block;
+        width: 100%;
+    }
+}

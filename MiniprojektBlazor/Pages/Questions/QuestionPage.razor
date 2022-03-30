@@ -1,0 +1,105 @@
+﻿@page "/questions/{QuestionId:int}/"
+
+@inject HttpClient http
+@inject AppDataService service
+
+<PageTitle>Spørgsmål</PageTitle>
+
+@if (question is null)
+{
+	<div class="d-flex">
+		<p class="flex-grow-1 flex-shrink-1">Indlæser...</p>
+		<AskQuestionPrompt />
+	</div>
+}
+else
+{
+	<div>
+		<div class="">
+			<div class="d-flex" style="border-bottom: 1px solid #00000020">
+				<div class="card-summary w-auto gap-2 flex-grow-1">
+					<div class="fs-7">
+						<div class="lh-2" style="color: #6a737c">
+							@question.Subject.Name
+						</div>
+					</div>
+					<div>
+						<h5 class="card-title fw-normal fs-5 m-0">
+							@question.Title
+						</h5>
+					</div>
+					<div class="card-user d-flex text-nowrap gap-1" style="font-size: smaller">
+						<time class="card-user--time d-inline-flex gap-1">
+							<span>Indsendt</span>
+							<span title="@question.Date" class="relativetime">
+								@(service.GetPrettyDate(@question.Date))
+							</span>
+						</time>
+						<div class="card-user--info d-inline-flex">
+							<span>
+								af @question.Username
+							</span>
+						</div>
+					</div>
+				</div>
+				<AskQuestionPrompt />
+			</div>
+			<div class="card-body d-grid justify-content-between">
+				<div class="card-left w-auto" style="grid-column: 1; min-width: 0">
+					<div>
+						<p class="card-text fw-mormal fs-6">
+							@question.Text
+						</p>
+					</div>
+				</div>
+				<div class="card-right w-auto" style="grid-column: 2;">
+					<div class="vote-body">
+						<button class="btn btn-vote up"
+							@onclick="(async () => await UpvoteQuestion(question))" >
+							<span class="oi oi-chevron-top"></span>
+						</button>
+						<span class="text-center flex-column">
+							@question.GetScore()
+						</span>
+						<button class="btn btn-vote down"
+						@onclick="(async () => await DownvoteQuestion(question))" >
+							<span class="oi oi-chevron-bottom"></span>
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="" style="padding: 0rem 0rem 1rem 1rem">
+				<Answers QuestionId="@question.Id" />
+		</div>
+	</div>
+}
+
+@code {
+	[Parameter]
+	public int QuestionId { get; set; }
+
+	private QuestionData question;
+
+	protected override async Task OnInitializedAsync()
+	{
+		await GetQuestion();
+	}
+
+	private async Task GetQuestion()
+	{
+		question = await service.GetQuestionById(QuestionId);
+	}
+
+	private async Task UpvoteQuestion(QuestionData question)
+	{
+		await service.UpvoteQuestion(question);
+		await GetQuestion();
+	}
+
+	private async Task DownvoteQuestion(QuestionData question)
+	{
+		await service.DownvoteQuestion(question);
+		await GetQuestion();
+	}
+}

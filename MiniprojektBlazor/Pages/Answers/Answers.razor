@@ -1,0 +1,105 @@
+﻿@inject HttpClient http
+@inject AppDataService service
+
+@if (answers is null)
+{
+	<p>Ingen svar</p>
+}
+else
+{
+	@foreach (var answer in answers)
+	{
+		<div class="card mt-2" style="padding-right: 0">
+			<div class=card-header>
+				<div class="card-user d-flex gap-1" style="font-size: small">
+					<div class="card-user--info d-inline-flex">
+						<span>
+							@answer.Username
+						</span>
+					</div>
+					<time class="card-user--time d-inline-flex gap-1">
+						<span title="@answer.Date" class="relativetime">
+							@(service.GetPrettyDate(@answer.Date))
+						</span>
+					</time>
+				</div>
+			</div>
+			<div class="card-body">
+				<div style="float: left">
+					<p>@answer.Text</p>
+				</div>
+					<div class="vote-body">
+						<button class="btn btn-vote up"
+							@onclick="(async () => await UpvoteAnswer(answer))" >
+							<span class="oi oi-chevron-top"></span>
+						</button>
+						<span class="text-center flex-column">
+							@answer.GetScore()
+						</span>
+						<button class="btn btn-vote down"
+							@onclick="(async () => await DownvoteAnswer(answer))" >
+							<span class="oi oi-chevron-bottom"></span>
+						</button>
+					</div>
+			</div>
+		</div>
+	}
+	<div class="card card-answer">
+		<EditForm Model="@newAnswer" OnValidSubmit="@CreateAnswer">
+			<div class="form-group">
+				<label for="answerText" class="col-sm-2 col-form-label">Svar</label>
+				<InputTextArea class="form-control col-sm-2" id="answerText" placeholder="Skriv et svar" @bind-Value="@newAnswer.Text" />
+			</div>
+
+			<div class="form-group">
+				<label for="answerUsername" class="col-sm-2 col-form-label">Navn</label>
+				<InputText class="form-control" id="answerUsername" placeholder="Skriv dit navn" @bind-Value="@newAnswer.Username" />
+			</div>
+
+			<button type="submit" class="btn btn-primary m-2">
+				Besvar
+			</button>
+		</EditForm>
+	</div>
+}
+
+@code {
+	[Parameter]
+	public int QuestionId { get; set; }
+
+	private AnswerData[]? answers;
+
+	private AnswerData newAnswer = new() { };
+
+	protected override async Task OnInitializedAsync()
+	{
+		await ListAnswers();
+	}
+
+	private async Task ListAnswers()
+	{
+		answers = await service.ListAnswersById(QuestionId);
+	}
+
+	private async Task CreateAnswer()
+	{
+		newAnswer.QuestionId = QuestionId;
+		await service.CreateAnswer(newAnswer);
+		await ListAnswers();
+	}
+
+	private async Task UpvoteAnswer(AnswerData answer)
+	{
+		answer.QuestionId = QuestionId;
+		await service.UpvoteAnswer(answer);
+		await ListAnswers();
+	}
+
+	private async Task DownvoteAnswer(AnswerData answer)
+	{
+		answer.QuestionId = QuestionId;
+		await service.DownvoteAnswer(answer);
+		await ListAnswers();
+	}
+
+}

@@ -1,0 +1,48 @@
+﻿@page "/subjects"
+
+@inject HttpClient http
+@inject AppDataService service
+
+<PageTitle>Emner</PageTitle>
+
+<div class="d-flex">
+	<h1 class="flex-grow-1 flex-shrink-1">Emner</h1>
+	<AskQuestionPrompt />
+</div>
+
+<p>Liste over emner</p>
+
+@if (subjects == null)
+{
+	<p><em>Indlæser...</em></p>
+}
+else
+{
+	<div class="card-columns">
+		@foreach (var subject in subjects)
+		{
+			<div class="card">
+				<div class="card-body">
+					<a class="text-decoration-none" href="/subjects/@subject.Id/">
+						<h5 class="card-title">
+							@subject.Name
+						</h5>
+						<p class="card-text" style="color: WindowText">
+							Spørgsmål i @subject.Name-kategorien
+						</p>
+					</a>
+				</div>
+			</div>
+		}
+	</div>
+}
+
+@code {
+	private SubjectData[]? subjects;
+
+	protected override async Task OnInitializedAsync()
+	{
+		subjects = await service.ListSubjects();
+	}
+
+}
