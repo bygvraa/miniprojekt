@@ -27,7 +27,7 @@ jobs:
           dbcs: ${{ secrets.DBCS }}
         run: |
           dotnet tool install --global dotnet-ef
-          cd server
+          cd MiniprojektAPI
           dotnet tool restore
           dotnet ef database update
           
