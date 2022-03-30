@@ -2,6 +2,7 @@
 
 @inject HttpClient http
 @inject AppDataService service
+@inject NavigationManager navigation
 
 <PageTitle>Stil et spørgsmål</PageTitle>
 
@@ -65,6 +66,8 @@
 		newQuestion.Subject = _subject;
 
 		await service.CreateQuestion(newQuestion);
+
+		navigation.NavigateTo("questions");
 	}
 
 }
