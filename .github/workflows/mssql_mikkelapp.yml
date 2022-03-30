@@ -21,7 +21,16 @@ jobs:
         with:
           dotnet-version: '6.0.x'
           include-prerelease: true
-
+          
+      - name: Update database
+        env: 
+          dbcs: ${{ secrets.DBCS }}
+        run: |
+          dotnet tool install --global dotnet-ef
+          cd server
+          dotnet tool restore
+          dotnet ef database update
+          
       - name: Build with dotnet
         run: dotnet build --configuration Release
 
