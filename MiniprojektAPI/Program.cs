@@ -30,7 +30,7 @@ builder.Services.AddCors(options =>
 
 // Tilføj DbContext factory som service, så man kan få context ind via Dependency Injection.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("QuestionContextSQLite")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("QuestionContextSql")));
 
 // Kan vise flotte fejlbeskeder i browseren, hvis der kommer fejl fra databasen
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
