@@ -27,6 +27,12 @@ public class AppDataService
         return await http.GetFromJsonAsync<QuestionData[]>(url);
     }
 
+    public async Task<QuestionData[]> ListQuestionsByNewest()
+    {
+        string url = $"{baseAPI}questions/newest";
+        return await http.GetFromJsonAsync<QuestionData[]>(url);
+    }
+
     public async Task<QuestionData> GetQuestionById(int id)
     {
         string url = $"{baseAPI}questions/{id}";

@@ -50,7 +50,9 @@ else
 				</div>
 				<div class="card-footer d-flex justify-content-between">
 					<div class="p-1 m-0 lh-1" style="color: #39739d; background-color: #e1ecf4">
-						@question.Subject.Name
+						<a class="text-decoration-none" href="/subjects/@question.Subject.Id/">
+							@question.Subject.Name
+						</a>
 					</div>
 					<div class="card-user d-flex gap-1">
 						<div class="card-user--info">
@@ -76,7 +78,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        questions = await service.ListQuestions();
+        questions = await service.ListQuestionsByNewest();
     }
 
 }

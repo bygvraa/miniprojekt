@@ -55,6 +55,14 @@ public class DataService
 		    .ToList();
 	}
 
+    public List<Question> ListQuestionsByNewest()
+    {
+        return db.Questions
+            .Include(q => q.Subject)
+            .OrderByDescending(q => q.Date)
+            .ToList();
+    }
+
     public Question GetQuestionById(int questionId) {
         return db.Questions
             .Where(q => q.Id == questionId)

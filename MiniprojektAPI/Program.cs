@@ -11,6 +11,11 @@ var builder = WebApplication.CreateBuilder(
     }
 );
 
+//builder.Services.AddResponseCompression(options =>
+//{
+//    options.EnableForHttps = true;
+//});
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -53,6 +58,8 @@ builder.Services.Configure<JsonOptions>(options =>
 // ---------------------------------------------------------------
 
 var app = builder.Build();
+
+//app.UseResponseCompression();
 
 // Sørg for at HTML mv. også kan serveres
 var options = new DefaultFilesOptions();
@@ -102,6 +109,11 @@ app.Use(async (context, next) =>
 app.MapGet("/api/questions/", (DataService service) =>
 {
     return service.ListQuestions();
+});
+
+app.MapGet("/api/questions/newest", (DataService service) =>
+{
+    return service.ListQuestionsByNewest();
 });
 
 app.MapGet("/api/questions/{id}", (DataService service, int id) =>
