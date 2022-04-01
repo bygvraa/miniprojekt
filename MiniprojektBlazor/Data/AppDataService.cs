@@ -116,6 +116,27 @@ public class AppDataService
 
     // -----------------------------------------------------
     // -- Metoder
+
+    public string GetColor(string text)
+    {
+        var hash = 0;
+
+        for (var i = 0; i < text.Length; i++)
+        {
+            hash = text.ElementAt(i) + ((hash << 5) - hash);
+            hash &= hash;
+        }
+
+        int hue = hash % 360;
+
+        if (hue < 0)
+            hue += 360;
+
+        var colorHsl = $"hsl({hue}deg 100% 40%)";
+
+        return colorHsl;
+    }
+
     public string GetPrettyDate(DateTime d)
     {
         // 1.
@@ -170,7 +191,7 @@ public class AppDataService
             // Less than one day ago.
             if (secDiff < 86400)
             {
-                return string.Format("for {0} timer sider",
+                return string.Format("for {0} timer siden",
                     Math.Floor((double)secDiff / 3600));
             }
         }
