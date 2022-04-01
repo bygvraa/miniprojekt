@@ -3,48 +3,51 @@
 
 @if (answers is null)
 {
-	<p>Ingen svar</p>
+	<p>Ingen har svart på dette spørgsmål endnu.</p>
 }
 else
 {
-	@foreach (var answer in answers)
-	{
-		<div class="card mt-2" style="padding-right: 0">
-			<div class=card-header>
-				<div class="card-user d-flex gap-1" style="font-size: small">
-					<div class="card-user--info d-inline-flex">
-						<span>
-							@answer.Username
-						</span>
+	<div class="card-group" style="padding-left: 1rem">
+		@foreach (var answer in answers)
+		{
+			<div class="card card-answer">
+				<div class=card-header>
+					<div class="card-user d-flex gap-1" style="font-size: small">
+						<div class="card-user--info d-inline-flex">
+							<span>
+								@answer.Username
+							</span>
+						</div>
+						<time class="card-user--time d-inline-flex gap-1">
+							<span>svarede</span>
+							<span title="@answer.Date" class="relativetime">
+								@(service.GetPrettyDate(@answer.Date))
+							</span>
+						</time>
 					</div>
-					<time class="card-user--time d-inline-flex gap-1">
-						<span title="@answer.Date" class="relativetime">
-							@(service.GetPrettyDate(@answer.Date))
-						</span>
-					</time>
 				</div>
-			</div>
-			<div class="card-body">
-				<div style="float: left">
-					<p>@answer.Text</p>
-				</div>
+				<div class="card-body bg-light">
+					<div style="float: left">
+						<p>@answer.Text</p>
+					</div>
 					<div class="vote-body">
 						<button class="btn btn-vote up"
-							@onclick="(async () => await UpvoteAnswer(answer))" >
+						@onclick="(async () => await UpvoteAnswer(answer))">
 							<span class="oi oi-chevron-top"></span>
 						</button>
 						<span class="text-center flex-column">
 							@answer.GetScore()
 						</span>
 						<button class="btn btn-vote down"
-							@onclick="(async () => await DownvoteAnswer(answer))" >
+						@onclick="(async () => await DownvoteAnswer(answer))">
 							<span class="oi oi-chevron-bottom"></span>
 						</button>
 					</div>
+				</div>
 			</div>
-		</div>
-	}
-	<div class="card card-answer">
+		}
+	</div>
+	<div class="card card-answerbox">
 		<EditForm Model="@newAnswer" OnValidSubmit="@CreateAnswer">
 			<div class="form-group">
 				<label for="answerText" class="col-sm-2 col-form-label">Svar</label>
