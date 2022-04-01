@@ -31,15 +31,24 @@ else
 {
 	@foreach (var question in questions)
 	{
-		<div class="card-group">
-			<div class="card bg-light mb-1">
-				<div class="card-header">
+		<div class="card-group card-question-group">
+			<div class="card card-question bg-light">
+				<div class="card-header card-question-header">
 					<div class="card-summary d-flex w-auto gap-2">
 						<div class="d-inline-flex gap-1">
-							<span class="mr-1">@question.GetScore()</span>
-							<span>stemmer</span>
+							<span class="mr-1">
+								@question.GetScore()
+							</span>
+							@if (@question.GetScore() == 1)
+							{
+								<span>stemme</span>
+							}
+							else
+							{
+								<span>stemmer</span>
+							}
 						</div>
-						<div style="color: #6a737c">
+						<div>
 							<span></span>
 							<span></span>
 						</div>
@@ -59,13 +68,16 @@ else
 					<div style="display: flex;align-items: center;flex-direction: column; float: right;">
 					</div>
 				</div>
-				<div class="card-footer d-flex justify-content-between">
-					<div class="p-1 m-0 lh-1" style="color: #39739d; background-color: #e1ecf4">
+				<div class="card-footer card-question-footer">
+					<div>
 					</div>
 					<div class="card-user d-flex gap-1">
 						<div class="card-user--info">
 							<p class="card-text flex-row">
-								@question.Username
+								<span class="oi oi-dashboard" style="color: @(service.GetColor(question.Username))" />
+								<span>
+									@question.Username
+								</span>
 							</p>
 						</div>
 						<time class="card-user--time">
