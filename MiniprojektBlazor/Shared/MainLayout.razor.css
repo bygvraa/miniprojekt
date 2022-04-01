@@ -79,3 +79,16 @@ main {
         padding-right: 1.5rem !important;
     }
 }
+
+/* Sidebar */
+.sidebar-blue {
+    background-color: #001352e0;
+    background-image: unset;
+}
+
+@media (min-width: 641px) {
+    .sidebar-blue {
+        background-color: #001352e0;
+        background-image: unset;
+    }
+}
