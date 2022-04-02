@@ -1,8 +1,8 @@
 using System.Net.Http.Json;
 using System.Text.Json;
-using Microsoft.Extensions.Configuration;
+using Data;
 
-namespace Data;
+namespace Service;
 
 public class AppDataService
 {
@@ -10,8 +10,7 @@ public class AppDataService
     private readonly IConfiguration configuration;
     private readonly string baseAPI = "";
 
-    public AppDataService(HttpClient http, IConfiguration configuration)
-    {
+    public AppDataService(HttpClient http, IConfiguration configuration) {
         this.http = http;
         this.configuration = configuration;
         // Denne konfiguration læses fra filen "appsettings.json".
@@ -21,91 +20,83 @@ public class AppDataService
     // -----------------------------------------------------
     // -- Questions
 
-    public async Task<QuestionData[]> ListQuestions()
-    {
-        string url = $"{baseAPI}questions";
+    public async Task<QuestionData[]> ListQuestions() {
+        var url = $"{baseAPI}questions";
         return await http.GetFromJsonAsync<QuestionData[]>(url);
     }
 
-    public async Task<QuestionData[]> ListQuestionsByNewest()
-    {
-        string url = $"{baseAPI}questions/newest";
+    public async Task<QuestionData[]> ListQuestionsByPage(int? pageNumber, int pageSize) {
+        var url = $"{baseAPI}questions/?pageNumber={pageNumber}&pageSize={pageSize}";
         return await http.GetFromJsonAsync<QuestionData[]>(url);
     }
 
-    public async Task<QuestionData> GetQuestionById(int id)
-    {
-        string url = $"{baseAPI}questions/{id}";
+    public async Task<QuestionData[]> ListQuestionsByNewest() {
+        var url = $"{baseAPI}questions/newest";
+        return await http.GetFromJsonAsync<QuestionData[]>(url);
+    }
+
+    public async Task<QuestionData> GetQuestionById(int id) {
+        var url = $"{baseAPI}questions/{id}";
         return await http.GetFromJsonAsync<QuestionData>(url);
     }
 
-    public async Task<QuestionData[]> GetQuestionsBySubjectId(int id)
-    {
-        string url = $"{baseAPI}questions/{id}/subject";
+    public async Task<QuestionData[]> GetQuestionsBySubjectId(int id) {
+        var url = $"{baseAPI}questions/{id}/subject";
         return await http.GetFromJsonAsync<QuestionData[]>(url);
     }
 
-    public async Task CreateQuestion(QuestionData q)
-    {
+    public async Task CreateQuestion(QuestionData q) {
         var data = new QuestionDataAPI(q.Subject.Id, q.Title, q.Text, q.Username);
 
-        string url = $"{baseAPI}questions/";
+        var url = $"{baseAPI}questions/";
         await http.PostAsJsonAsync(url, data);
     }
 
-    public async Task UpvoteQuestion(QuestionData question)
-    {
-        string url = $"{baseAPI}questions/{question.Id}/upvote/";
+    public async Task UpvoteQuestion(QuestionData question) {
+        var url = $"{baseAPI}questions/{question.Id}/upvote/";
         await http.PutAsJsonAsync(url, question);
     }
 
-    public async Task DownvoteQuestion(QuestionData question)
-    {
-        string url = $"{baseAPI}questions/{question.Id}/downvote/";
+    public async Task DownvoteQuestion(QuestionData question) {
+        var url = $"{baseAPI}questions/{question.Id}/downvote/";
         await http.PutAsJsonAsync(url, question);
     }
 
     // -----------------------------------------------------
     // -- Answers
 
-    public async Task<AnswerData[]> ListAnswersById(int id)
-    {
-        string url = $"{baseAPI}answers/{id}/question";
+    public async Task<AnswerData[]> ListAnswersById(int id) {
+        var url = $"{baseAPI}answers/{id}/question";
         return await http.GetFromJsonAsync<AnswerData[]>(url);
     }
 
-    public async Task CreateAnswer(AnswerData a)
-    {
+    public async Task CreateAnswer(AnswerData a) {
         var data = new AnswerDataAPI(a.QuestionId, a.Text, a.Username);
 
-        string url = $"{baseAPI}answers/";
+        var url = $"{baseAPI}answers/";
         await http.PostAsJsonAsync(url, data);
     }
 
-    public async Task UpvoteAnswer(AnswerData answer)
-    {
-        string url = $"{baseAPI}answers/{answer.Id}/upvote/";
+    public async Task UpvoteAnswer(AnswerData answer) {
+        var url = $"{baseAPI}answers/{answer.Id}/upvote/";
         await http.PutAsJsonAsync(url, answer);
     }
 
-    public async Task DownvoteAnswer(AnswerData answer)
-    {
-        string url = $"{baseAPI}answers/{answer.Id}/downvote/";
+    public async Task DownvoteAnswer(AnswerData answer) {
+        var url = $"{baseAPI}answers/{answer.Id}/downvote/";
         await http.PutAsJsonAsync(url, answer);
     }
 
     // -----------------------------------------------------
     // -- Subjects
 
-    public async Task<SubjectData[]> ListSubjects()
-    {
-        string url = $"{baseAPI}subjects";
+    public async Task<SubjectData[]> ListSubjects() {
+        var url = $"{baseAPI}subjects";
         return await http.GetFromJsonAsync<SubjectData[]>(url);
     }
 
-    public async Task<SubjectData> GetSubjectById(int id)
-    {
-        string url = $"{baseAPI}subjects/{id}";
+    public async Task<SubjectData> GetSubjectById(int id) {
+        var url = $"{baseAPI}subjects/{id}";
         return await http.GetFromJsonAsync<SubjectData>(url);
     }
 
@@ -117,8 +108,7 @@ public class AppDataService
     // -----------------------------------------------------
     // -- Metoder
 
-    public string GetColor(string text)
-    {
+    public string GetColor(string text) {
         var hash = 0;
 
         for (var i = 0; i < text.Length; i++)
@@ -127,7 +117,7 @@ public class AppDataService
             hash &= hash;
         }
 
-        int hue = hash % 360;
+        var hue = hash % 360;
 
         if (hue < 0)
             hue += 360;
@@ -137,19 +127,18 @@ public class AppDataService
         return colorHsl;
     }
 
-    public string GetPrettyDate(DateTime d)
-    {
+    public string GetPrettyDate(DateTime d) {
         // 1.
         // Get time span elapsed since the date.
         TimeSpan s = DateTime.Now.Subtract(d);
 
         // 2.
         // Get total number of days elapsed.
-        int dayDiff = (int)s.TotalDays;
+        var dayDiff = (int)s.TotalDays;
 
         // 3.
         // Get total number of seconds elapsed.
-        int secDiff = (int)s.TotalSeconds;
+        var secDiff = (int)s.TotalSeconds;
 
         // 4.
         // Don't allow out of range values.
