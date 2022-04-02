@@ -12,7 +12,7 @@
 
 <p>Nyeste spørgsmål</p>
 
-@if (questions == null)
+@if (questions is null)
 {
 	<p><em>Indlæser...</em></p>
 }
@@ -25,7 +25,7 @@ else
 				@*@(index++)*@
 			</div>
 			<div class="card-group card-question-group">
-				<div class="card card-question bg-light">
+				<div class="card card-question bg-lite">
 					<div class="card-header card-question-header">
 						<div class="card-summary d-flex w-auto gap-2">
 							<div class="d-inline-flex gap-1">
@@ -88,15 +88,102 @@ else
 			</div>
 		</div>
 	}
+	<div>
+		<nav aria-label="...">
+			<ul class="pagination">
+
+				<li class="page-item @PageStatus(PreviousPageStatus)">
+					<a class="page-link"
+						href="/questions?page=@PreviousPage"
+						@onclick="@(async () => await PageNavigation(PreviousPage))">Forrige</a>
+				</li>
+
+				<li class="page-item @PageStatus(NextPageStatus)">
+					<a class="page-link"
+						href="/questions?page=@NextPage"
+						@onclick="@(async () => await PageNavigation(NextPage))" >Næste</a>
+				</li>
+
+			</ul>
+		</nav>
+	</div>
 }
 
 @code {
+	[Parameter]
+	[SupplyParameterFromQuery(Name = "page")]
+	public int? Page { get; set; }
+
+	public int? NextPage;
+	public int? PreviousPage;
+
+	public string NextPageStatus = "disabled";
+	public string PreviousPageStatus = "disabled";
+
+	public string PageStatus(string status)
+	{	
+		return status;
+	}
+
+
 	private QuestionData[]? questions;
+
 	private int index = 1;
 
-    protected override async Task OnInitializedAsync()
-    {
-        questions = await service.ListQuestionsByNewest();
-    }
+
+	protected override async Task OnInitializedAsync()
+	{
+		// I tilfælde af, at man navigerer ind på ".../questions/", så bliver 'Page = 1',
+		// og man kommer derved ind på den første side med spørgsmål.
+		@if (Page is null)
+		{
+			Page = 1;
+		}
+
+		questions = await GetQuestionsByPage(Page);
+
+
+		NextPage = Page + 1;
+
+		@if (Page > 1)
+		{
+			PreviousPage = Page - 1;
+		}
+
+		@if ((await GetQuestionsByPage(NextPage)).Count() != 0)
+		{
+			NextPageStatus = "active";
+		}
+	}
+
+	protected async Task<QuestionData[]> GetQuestionsByPage(int? page)
+	{
+		return await service.ListQuestionsByPage(page, 3);
+	}
+
+	protected async Task PageNavigation(int? page)
+	{
+		questions = await GetQuestionsByPage(page);
+
+		@if (Page > 1)
+		{
+			PreviousPage = Page - 1;
+			PreviousPageStatus = "active";
+		}
+		else
+		{
+			PreviousPageStatus = "disabled";
+		}
+
+		NextPage = Page + 1;
+		@if ((await GetQuestionsByPage(NextPage)).Count() != 0)
+		{
+			NextPageStatus = "active";
+		}
+		else
+		{
+			NextPageStatus = "disabled";
+		}
+	}
 
 }
