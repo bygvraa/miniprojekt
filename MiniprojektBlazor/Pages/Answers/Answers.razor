@@ -10,8 +10,8 @@ else
 	<div class="card-group" style="padding-left: 1rem">
 		@foreach (var answer in answers)
 		{
-			<div class="card card-answer">
-				<div class=card-header>
+			<div class="card card-answer bg-lite">
+				<div class="card-header card-answer-header">
 					<div class="card-user d-flex gap-1" style="font-size: small">
 						<div class="card-user--info d-inline-flex">
 							<span>
@@ -26,7 +26,7 @@ else
 						</time>
 					</div>
 				</div>
-				<div class="card-body bg-light">
+				<div class="card-body">
 					<div style="float: left">
 						<p>@answer.Text</p>
 					</div>
@@ -47,7 +47,7 @@ else
 			</div>
 		}
 	</div>
-	<div class="card card-answerbox">
+	<div class="card card-answerbox bg-lite">
 		<EditForm Model="@newAnswer" OnValidSubmit="@CreateAnswer">
 			<div class="form-group">
 				<label for="answerText" class="col-sm-2 col-form-label">Svar</label>

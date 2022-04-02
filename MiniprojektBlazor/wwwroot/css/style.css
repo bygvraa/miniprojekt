@@ -41,6 +41,10 @@
     margin: 0;
 }
 
+.bg-lite {
+    background-color: #bcc6cf52;
+}
+
 /*Cards*/
 .card-answer {
     margin-top: 0.75rem;
@@ -49,8 +53,11 @@
 
 }
 
+.card-answer-header {
+    background-color: transparent;
+}
+
 .card-answerbox {
-    background-color: #00000008;
     margin: 1rem 0 0 -1rem;
     border: 0;
     border-radius: 0px;
