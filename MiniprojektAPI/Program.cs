@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.Json;
 
 using Data;
+using Models;
 using Service;
 
 var builder = WebApplication.CreateBuilder(
@@ -106,76 +107,109 @@ app.Use(async (context, next) =>
 // ---------------------------------------------------------------
 // -- Questions --
 
-app.MapGet("/api/questions/", (DataService service) =>
-{
-    return service.ListQuestions();
-});
+//app.MapGet("/api/questions/", async (DataService service) =>
+//{
+//    return await service.ListQuestions();
+//})
+//    .WithName("GetQuestions").WithTags("Questions");
 
-app.MapGet("/api/questions/newest", (DataService service) =>
-{
-    return service.ListQuestionsByNewest();
-});
 
-app.MapGet("/api/questions/{id}", (DataService service, int id) =>
+app.MapGet("/api/questions/", async (DataService service, int pageNumber, int pageSize) =>
 {
-    return service.GetQuestionById(id);
-});
+    return await service.GetQuestionsByPage(pageNumber, pageSize);
+})
+    .WithName("GetQuestionsByPage").WithTags("Questions");
 
-app.MapGet("/api/questions/{id}/subject", (DataService service, int id) =>
-{
-    return service.ListQuestionsBySubjectId(id);
-});
 
-app.MapPost("/api/questions/", (DataService service, QuestionDataAPI data) =>
+app.MapGet("/api/questions/newest", async (DataService service) =>
 {
-    return service.CreateQuestion(data.SubjectId, data.Title, data.Text, data.Username);
-});
+    return await service.ListQuestionsByNewest();
+})
+    .WithName("GetQuestionsByNewest").WithTags("Questions");
 
-app.MapPut("/api/questions/{id}/upvote", (DataService service, int id) =>
-{
-    return service.UpdateQuestionByIdUpvote(id);
-});
 
-app.MapPut("/api/questions/{id}/downvote", (DataService service, int id) =>
+app.MapGet("/api/questions/{id}", async (DataService service, int id) =>
 {
-    return service.UpdateQuestionByIdDownvote(id);
-});
+    return await service.GetQuestionById(id);
+})
+    .WithName("GetQuestionById").WithTags("Questions");
+
+
+app.MapGet("/api/questions/{id}/subject", async (DataService service, int id) =>
+{
+    return await service.ListQuestionsBySubjectId(id);
+})
+    .WithName("GetQuestionsBySubject").WithTags("Questions");
+
+
+app.MapPost("/api/questions/", async (DataService service, QuestionDataAPI data) =>
+{
+    return await service.CreateQuestion(data.SubjectId, data.Title, data.Text, data.Username);
+})
+    .WithName("CreateQuestion").WithTags("Questions");
+
+
+app.MapPut("/api/questions/{id}/upvote", async (DataService service, int id) =>
+{
+    return await service.UpdateQuestionByIdUpvote(id);
+})
+    .WithName("UpvoteQuestion").WithTags("Questions");
+
+
+app.MapPut("/api/questions/{id}/downvote", async (DataService service, int id) =>
+{
+    return await service.UpdateQuestionByIdDownvote(id);
+})
+    .WithName("DownvoteQuestion").WithTags("Questions");
+
 
 // ---------------------------------------------------------------
 // -- Subjects --
 
-app.MapGet("/api/subjects/", (DataService service) =>
+app.MapGet("/api/subjects/", async (DataService service) =>
 {
-    return service.ListSubjects();
-});
+    return await service.ListSubjects();
+})
+    .WithName("GetSubjects").WithTags("Subjects");
 
-app.MapGet("/api/subjects/{id}", (DataService service, int id) =>
+
+app.MapGet("/api/subjects/{id}", async (DataService service, int id) =>
 {
-    return service.GetSubjectById(id);
-});
+    return await service.GetSubjectById(id);
+})
+    .WithName("GetSubjectById").WithTags("Subjects");
+
 
 // ---------------------------------------------------------------
 // -- Answers --
 
-app.MapGet("/api/answers/{id}/question", (DataService service, int id) =>
+app.MapGet("/api/answers/{id}/question", async (DataService service, int id) =>
 {
-    return service.ListAnswersByQuestionId(id);
-});
+    return await service.ListAnswersByQuestionId(id);
+})
+    .WithName("GetAnswers").WithTags("Answers");
 
-app.MapPost("/api/answers/", (DataService service, AnswerDataAPI data) =>
-{
-    return service.CreateAnswer(data.QuestionId, data.Text, data.Username);
-});
 
-app.MapPut("/api/answers/{id}/upvote", (DataService service, int id) =>
+app.MapPost("/api/answers/", async (DataService service, AnswerDataAPI data) =>
 {
-    return service.UpdateAnswerByIdUpvote(id);
-});
+    return await service.CreateAnswer(data.QuestionId, data.Text, data.Username);
+})
+    .WithName("CreateAnswer").WithTags("Answers");
 
-app.MapPut("/api/answers/{id}/downvote", (DataService service, int id) =>
+
+app.MapPut("/api/answers/{id}/upvote", async (DataService service, int id) =>
 {
-    return service.UpdateAnswerByIdDownvote(id);
-});
+    return await service.UpdateAnswerByIdUpvote(id);
+})
+    .WithName("UpvoteAnswer").WithTags("Answers");
+
+
+app.MapPut("/api/answers/{id}/downvote", async (DataService service, int id) =>
+{
+    return await service.UpdateAnswerByIdDownvote(id);
+})
+    .WithName("DownvoteAnswer").WithTags("Answers");
+
 
 // ---------------------------------------------------------------
 
