@@ -13,7 +13,9 @@ else
 			<div class="card card-answer bg-lite">
 				<div class="card-header card-answer-header">
 					<div class="card-user d-flex gap-1" style="font-size: small">
-						<div class="card-user--info d-inline-flex">
+						<div class="card-user--info d-inline-flex gap-1">
+							<span class="oi oi-dashboard mt-1 gap-1" 
+								style="color: @(service.GetColor(answer.Username)); font-size: smaller; " />
 							<span>
 								@answer.Username
 							</span>
@@ -59,7 +61,7 @@ else
 				<InputText class="form-control" id="answerUsername" placeholder="Skriv dit navn" @bind-Value="@newAnswer.Username" />
 			</div>
 
-			<button type="submit" class="btn btn-primary m-2">
+			<button type="submit" class="btn btn-qna m-2">
 				Besvar
 			</button>
 		</EditForm>
