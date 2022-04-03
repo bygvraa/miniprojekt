@@ -27,7 +27,7 @@ else
 			<div class="card-group card-question-group">
 				<div class="card card-question bg-lite">
 					<div class="card-header card-question-header">
-						<div class="card-summary d-flex w-auto gap-2">
+						<div class="card-summary card-question-summary">
 							<div class="d-inline-flex gap-1">
 								<span class="mr-1">
 								   @question.GetScore()
@@ -49,27 +49,25 @@ else
 					</div>
 					<div class="card-body">
 						<div style="float: left">
-							<h5 class="card-title fw-normal fs-5">
+							<h5 class="card-title card-quest-title">
 								<a class="text-decoration-none" href="/questions/@question.Id/">
 									@question.Title
 								</a>
 							</h5>
-							<p class="card-text fw-mormal fs-6">
+							<p class="card-text card-question-text">
 								@question.Text
 							</p>
-						</div>
-						<div style="display: flex;align-items: center;flex-direction: column; float: right;">
 						</div>
 					</div>
 					<div class="card-footer card-question-footer">
 						<div class="subject-tag">
-							<a class="text-decoration-none" href="/subjects/@question.Subject.Id/">
+							<a class="a-link text-decoration-none" href="/subjects/@question.Subject.Id/">
 								@question.Subject.Name
 							</a>
 						</div>
-						<div class="card-user d-flex gap-1">
+						<div class="card-user d-flex">
 							<div class="card-user--info">
-								<p class="card-text flex-row text-nowrap">
+								<p class="card-text card-user-text">
 									<span class="oi oi-dashboard" style="color: @(service.GetColor(question.Username))" />
 									<span>
 										@question.Username
