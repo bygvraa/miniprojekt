@@ -16,16 +16,18 @@ namespace Models
 
         public List<Answer> Answers { get; set; }
 
-        // Konstruktører
+        // Konstruktør
         public Question() { }
-
-        public Question(Subject subject, string title, string text, string username, DateTime date)
+        public Question(Subject subject, string title, string text, string username)
         {
-            this.Subject = subject;
-            this.Title = title;
-            this.Text = text;
-            this.Username = username;
-            this.Date = date;
+            Subject = subject;
+            Title = title;
+            Text = text;
+            Username = username;
+            Date = DateTime.Now;
+            Upvote = 1;
+            Downvote = 0;
+            Answers = new List<Answer>();
         }
     }
 }
