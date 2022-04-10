@@ -91,13 +91,13 @@ else
 			<ul class="pagination">
 
 				<li class="page-item @PageStatus(PreviousPageStatus)">
-					<a class="page-link"
+					<a class="page-link btn-no-focus"
 						href="/questions?page=@PreviousPage"
-						@onclick="@(async () => await PageNavigation(PreviousPage))">Forrige</a>
+						@onclick="@(async () => await PageNavigation(PreviousPage))" >Forrige</a>
 				</li>
 
 				<li class="page-item @PageStatus(NextPageStatus)">
-					<a class="page-link"
+					<a class="page-link btn-no-focus"
 						href="/questions?page=@NextPage"
 						@onclick="@(async () => await PageNavigation(NextPage))" >Næste</a>
 				</li>
@@ -118,22 +118,14 @@ else
 	public string NextPageStatus = "disabled";
 	public string PreviousPageStatus = "disabled";
 
-	public string PageStatus(string status)
-	{	
-		return status;
-	}
-
-
 	private QuestionData[]? questions;
-
-	// private int index = 1;
-
 
 	protected override async Task OnInitializedAsync()
 	{
-		// I tilfælde af, at man navigerer ind på ".../questions/", så bliver 'Page = 1',
+		// I tilfælde af, at man navigerer ind på ".../questions/",
+		// eller hvis 'Page' er lavere end 1, så bliver 'Page = 1',
 		// og man kommer derved ind på den første side med spørgsmål.
-		@if (Page is null)
+		@if (Page is null or < 1)
 		{
 			Page = 1;
 		}
@@ -143,12 +135,13 @@ else
 
 		NextPage = Page + 1;
 
-		@if (Page > 1)
+		@if (Page is not 1)
 		{
 			PreviousPage = Page - 1;
+			PreviousPageStatus = "active";
 		}
 
-		@if ((await GetQuestionsByPage(NextPage))?.Count() != 0)
+		@if ((await GetQuestionsByPage(NextPage))?.Count() is not 0)
 		{
 			NextPageStatus = "active";
 		}
@@ -159,29 +152,40 @@ else
 		return await service.GetQuestionsByPage(page, 3);
 	}
 
+
 	protected async Task PageNavigation(int? page)
 	{
 		questions = await GetQuestionsByPage(page);
 
-		@if (Page > 1)
+		@if (Page is not 1)
 		{
+			// hvis man ikke er på den første side i pagination
 			PreviousPage = Page - 1;
 			PreviousPageStatus = "active";
 		}
 		else
 		{
+			// hvis man er på den første side
 			PreviousPageStatus = "disabled";
 		}
 
 		NextPage = Page + 1;
-		@if ((await GetQuestionsByPage(NextPage))?.Count() != 0)
+		@if ((await GetQuestionsByPage(NextPage))?.Count() is not 0)
 		{
+			// hvis der er spørgsmål på næste side
 			NextPageStatus = "active";
 		}
 		else
 		{
+			// hvis der IKKE er spørgsmål på næste side
 			NextPageStatus = "disabled";
 		}
 	}
+
+	protected string PageStatus(string status)
+	{	
+		return status;
+	}
+
 
 }
