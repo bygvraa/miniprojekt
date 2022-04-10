@@ -83,7 +83,7 @@ else
 
 	private async Task ListAnswers()
 	{
-		answers = await service.ListAnswersById(QuestionId);
+		answers = await service.GetAnswersById(QuestionId);
 	}
 
 	private async Task CreateAnswer()

@@ -56,14 +56,14 @@
 
 	protected override async Task OnInitializedAsync()
 	{
-		subjects = await service.ListSubjects();
+		subjects = await service.GetSubjects();
 	}
 
 	private async Task CreateQuestion()
 	{
 		var _subject = await service.GetSubjectById(SubjectId);
 
-		newQuestion.Subject = _subject;
+		newQuestion.Subject = _subject!;
 
 		await service.CreateQuestion(newQuestion);
 

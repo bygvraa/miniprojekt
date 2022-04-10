@@ -126,7 +126,7 @@ else
 
 	private QuestionData[]? questions;
 
-	private int index = 1;
+	// private int index = 1;
 
 
 	protected override async Task OnInitializedAsync()
@@ -148,15 +148,15 @@ else
 			PreviousPage = Page - 1;
 		}
 
-		@if ((await GetQuestionsByPage(NextPage)).Count() != 0)
+		@if ((await GetQuestionsByPage(NextPage))?.Count() != 0)
 		{
 			NextPageStatus = "active";
 		}
 	}
 
-	protected async Task<QuestionData[]> GetQuestionsByPage(int? page)
+	protected async Task<QuestionData[]?> GetQuestionsByPage(int? page)
 	{
-		return await service.ListQuestionsByPage(page, 3);
+		return await service.GetQuestionsByPage(page, 3);
 	}
 
 	protected async Task PageNavigation(int? page)
@@ -174,7 +174,7 @@ else
 		}
 
 		NextPage = Page + 1;
-		@if ((await GetQuestionsByPage(NextPage)).Count() != 0)
+		@if ((await GetQuestionsByPage(NextPage))?.Count() != 0)
 		{
 			NextPageStatus = "active";
 		}
