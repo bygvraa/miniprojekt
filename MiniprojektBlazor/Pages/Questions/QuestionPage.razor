@@ -47,14 +47,14 @@ else
 			<AskQuestionPrompt />
 		</div>
 		<div class="card-body card-question-body">
-			<div class="card-left w-auto" style="grid-column: 1; min-width: 0">
+			<div class="card-left">
 				<div>
 					<p class="card-text card-question-text">
 						@question.Text
 					</p>
 				</div>
 			</div>
-			<div class="card-right w-auto" style="grid-column: 2;">
+			<div class="card-right">
 				<div class="vote-body">
 					<button class="btn btn-vote up"
 						@onclick="(async () => await UpvoteQuestion(question))">
