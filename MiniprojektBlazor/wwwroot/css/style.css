@@ -1,31 +1,30 @@
 ﻿/**/
 :root {
-    --bs-dark-body-color: #fff;
-    --bs-dark-body-bg: #212529;
     --bs-card-body-bg: #dbe6ee;
+    --bs-lite-body-bg: #fafafe;
+    --bs-color-1: #000000;
+    --bs-color-2: #093e63;
     --bs-color-3: #782903;
     --bs-btn-bg-1: #464A87;
     --bs-btn-bg-2: #363b7e;
     --bs-btn-bg-3: #2b3072;
     --bs-btn-border-1: #464A87;
     --bs-btn-box-shadow: #777ffc;
+    --sidebar-bg: #f2f3ff;
+    --sidebar-fold-out-bg: #daddff;
+    --nav-top-row-bg: #464a87;
+    --nav-btn-bg-active: #6E75D4;
+    --nav-btn-bg-hover: #464a87;
+    --nav-btn-color: #2b2d56;
+    --pagination-btn-color: #093e63;
 }
-/*
+
 body {
-    margin: 0;
-    font-family: var(--bs-body-font-family);
-    font-size: var(--bs-body-font-size);
-    font-weight: var(--bs-body-font-weight);
-    line-height: var(--bs-body-line-height);
-    color: var(--bs-dark-body-color);
-    text-align: var(--bs-body-text-align);
-    background-color: var(--bs-dark-body-bg);
-    -webkit-text-size-adjust: 100%;
-    -webkit-tap-highlight-color: transparent
-}*/
+    background-color: var(--bs-lite-body-bg);
+}
 
 a {
-    color: #093e63;
+    color: var(--bs-color-2);
 }
     a:hover {
         color: var(--bs-color-3);
@@ -88,10 +87,9 @@ a {
         box-shadow: 0 0 0 0.1rem var(--bs-btn-box-shadow);
     }
 
-.btn-no-focus {}
-    .btn-no-focus:focus {
-        box-shadow: unset;
-    }
+.btn-submit {
+    background-color: var(--bs-color-2);
+}
 
 .subject-tag {
     color: #39739d;
@@ -111,8 +109,15 @@ a {
     background-image: linear-gradient(328deg, #e5ecf1 0%, #e6eef7 70%);
 }
 
-/*---- Cards ----*/
+/*---- Pagination ----*/
+.btn-pageination {
+    background-color: #6E75D4;
+}
+    .btn-pageination:focus {
+        box-shadow: unset;
+    }
 
+/*---- Cards ----*/
 .card-user {
     display: inline-flex;
     gap: .25rem;
