@@ -118,6 +118,17 @@ a {
     white-space: nowrap;
 }
 
+.card-left {
+    width: auto;
+    min-width: 0;
+    grid-column: 1;
+}
+
+.card-right {
+    width: auto;
+    grid-column: 2;
+}
+
 /* Card: Answer */
 .card-answer {
     margin-top: 0.75rem;
