@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.Json;
 
-using Data;
-using Models;
+using API.Data;
 using Service;
 
 var builder = WebApplication.CreateBuilder(
@@ -12,10 +11,9 @@ var builder = WebApplication.CreateBuilder(
     }
 );
 
-//builder.Services.AddResponseCompression(options =>
-//{
-//    options.EnableForHttps = true;
-//});
+// Tilføj 'DataService' så den kan bruges i endpoints
+builder.Services.AddScoped<DataService>();
+
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -41,9 +39,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Kan vise flotte fejlbeskeder i browseren, hvis der kommer fejl fra databasen
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-// Tilføj 'DataService' så den kan bruges i endpoints
-builder.Services.AddScoped<DataService>();
-
 // Her kan man styre, hvordan den laver JSON.
 builder.Services.Configure<JsonOptions>(options =>
 {
@@ -59,8 +54,6 @@ builder.Services.Configure<JsonOptions>(options =>
 // ---------------------------------------------------------------
 
 var app = builder.Build();
-
-//app.UseResponseCompression();
 
 // Sørg for at HTML mv. også kan serveres
 var options = new DefaultFilesOptions();
@@ -107,25 +100,11 @@ app.Use(async (context, next) =>
 // ---------------------------------------------------------------
 // -- Questions --
 
-//app.MapGet("/api/questions/", async (DataService service) =>
-//{
-//    return await service.ListQuestions();
-//})
-//    .WithName("GetQuestions").WithTags("Questions");
-
-
-app.MapGet("/api/questions/", async (DataService service, int pageNumber, int pageSize) =>
+app.MapGet("/api/questions/", async (DataService service, int page, int size) =>
 {
-    return await service.GetQuestionsByPage(pageNumber, pageSize);
+    return await service.GetQuestionsByPage(page, size);
 })
     .WithName("GetQuestionsByPage").WithTags("Questions");
-
-
-app.MapGet("/api/questions/newest", async (DataService service) =>
-{
-    return await service.ListQuestionsByNewest();
-})
-    .WithName("GetQuestionsByNewest").WithTags("Questions");
 
 
 app.MapGet("/api/questions/{id}", async (DataService service, int id) =>
@@ -137,12 +116,12 @@ app.MapGet("/api/questions/{id}", async (DataService service, int id) =>
 
 app.MapGet("/api/questions/{id}/subject", async (DataService service, int id) =>
 {
-    return await service.ListQuestionsBySubjectId(id);
+    return await service.GetQuestionsBySubjectId(id);
 })
     .WithName("GetQuestionsBySubject").WithTags("Questions");
 
 
-app.MapPost("/api/questions/", async (DataService service, QuestionDataAPI data) =>
+app.MapPost("/api/questions/", async (DataService service, QuestionData data) =>
 {
     return await service.CreateQuestion(data.SubjectId, data.Title, data.Text, data.Username);
 })
@@ -164,33 +143,16 @@ app.MapPut("/api/questions/{id}/downvote", async (DataService service, int id) =
 
 
 // ---------------------------------------------------------------
-// -- Subjects --
-
-app.MapGet("/api/subjects/", async (DataService service) =>
-{
-    return await service.ListSubjects();
-})
-    .WithName("GetSubjects").WithTags("Subjects");
-
-
-app.MapGet("/api/subjects/{id}", async (DataService service, int id) =>
-{
-    return await service.GetSubjectById(id);
-})
-    .WithName("GetSubjectById").WithTags("Subjects");
-
-
-// ---------------------------------------------------------------
 // -- Answers --
 
 app.MapGet("/api/answers/{id}/question", async (DataService service, int id) =>
 {
-    return await service.ListAnswersByQuestionId(id);
+    return await service.GetAnswersByQuestionId(id);
 })
     .WithName("GetAnswers").WithTags("Answers");
 
 
-app.MapPost("/api/answers/", async (DataService service, AnswerDataAPI data) =>
+app.MapPost("/api/answers/", async (DataService service, AnswerData data) =>
 {
     return await service.CreateAnswer(data.QuestionId, data.Text, data.Username);
 })
@@ -212,11 +174,27 @@ app.MapPut("/api/answers/{id}/downvote", async (DataService service, int id) =>
 
 
 // ---------------------------------------------------------------
+// -- Subjects --
+
+app.MapGet("/api/subjects/", async (DataService service) =>
+{
+    return await service.GetSubjects();
+})
+    .WithName("GetSubjects").WithTags("Subjects");
+
+
+app.MapGet("/api/subjects/{id}", async (DataService service, int id) =>
+{
+    return await service.GetSubjectById(id);
+})
+    .WithName("GetSubjectById").WithTags("Subjects");
+
+
+// ---------------------------------------------------------------
 
 app.Run();
 
 // -- Records ----------------------------------------------------
-
-internal record QuestionDataAPI(int SubjectId, string Title, string Text, string Username);
-internal record SubjectDataAPI(string Name);
-internal record AnswerDataAPI(int QuestionId, string Text, string Username);
+internal record QuestionData(int SubjectId, string Title, string Text, string Username);
+internal record AnswerData(int QuestionId, string Text, string Username);
+internal record SubjectData(string Name);
