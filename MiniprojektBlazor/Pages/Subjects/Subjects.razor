@@ -42,7 +42,7 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		subjects = await service.ListSubjects();
+		subjects = await service.GetSubjects();
 	}
 
 }

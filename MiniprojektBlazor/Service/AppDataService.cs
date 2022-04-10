@@ -20,27 +20,22 @@ public class AppDataService
     // -----------------------------------------------------
     // -- Questions
 
-    public async Task<QuestionData[]> ListQuestions() {
+    public async Task<QuestionData[]?> GetQuestions() {
         var url = $"{baseAPI}questions";
         return await http.GetFromJsonAsync<QuestionData[]>(url);
     }
 
-    public async Task<QuestionData[]> ListQuestionsByPage(int? pageNumber, int pageSize) {
-        var url = $"{baseAPI}questions/?pageNumber={pageNumber}&pageSize={pageSize}";
+    public async Task<QuestionData[]?> GetQuestionsByPage(int? pageNumber, int pageSize) {
+        var url = $"{baseAPI}questions/?page={pageNumber}&size={pageSize}";
         return await http.GetFromJsonAsync<QuestionData[]>(url);
     }
 
-    public async Task<QuestionData[]> ListQuestionsByNewest() {
-        var url = $"{baseAPI}questions/newest";
-        return await http.GetFromJsonAsync<QuestionData[]>(url);
-    }
-
-    public async Task<QuestionData> GetQuestionById(int id) {
+    public async Task<QuestionData?> GetQuestionById(int id) {
         var url = $"{baseAPI}questions/{id}";
         return await http.GetFromJsonAsync<QuestionData>(url);
     }
 
-    public async Task<QuestionData[]> GetQuestionsBySubjectId(int id) {
+    public async Task<QuestionData[]?> GetQuestionsBySubjectId(int id) {
         var url = $"{baseAPI}questions/{id}/subject";
         return await http.GetFromJsonAsync<QuestionData[]>(url);
     }
@@ -65,7 +60,7 @@ public class AppDataService
     // -----------------------------------------------------
     // -- Answers
 
-    public async Task<AnswerData[]> ListAnswersById(int id) {
+    public async Task<AnswerData[]?> GetAnswersById(int id) {
         var url = $"{baseAPI}answers/{id}/question";
         return await http.GetFromJsonAsync<AnswerData[]>(url);
     }
@@ -90,12 +85,12 @@ public class AppDataService
     // -----------------------------------------------------
     // -- Subjects
 
-    public async Task<SubjectData[]> ListSubjects() {
+    public async Task<SubjectData[]?> GetSubjects() {
         var url = $"{baseAPI}subjects";
         return await http.GetFromJsonAsync<SubjectData[]>(url);
     }
 
-    public async Task<SubjectData> GetSubjectById(int id) {
+    public async Task<SubjectData?> GetSubjectById(int id) {
         var url = $"{baseAPI}subjects/{id}";
         return await http.GetFromJsonAsync<SubjectData>(url);
     }
@@ -120,14 +115,16 @@ public class AppDataService
         var hue = hash % 360;
 
         if (hue < 0)
+        {
             hue += 360;
+        }
 
         var colorHsl = $"hsl({hue}deg 100% 40%)";
 
         return colorHsl;
     }
 
-    public string GetPrettyDate(DateTime d) {
+    public string? GetPrettyDate(DateTime d) {
         // 1.
         // Get time span elapsed since the date.
         TimeSpan s = DateTime.Now.Subtract(d);
