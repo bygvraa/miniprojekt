@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System;
 
-using Data;
+using API.Data;
 using Models;
 
 namespace Service;
@@ -18,25 +18,18 @@ public class DataService
     // ---------------------------------------------------------------
     // -- Questions --
 
-    public async Task<List<Question>> ListQuestions() {
+    public async Task<List<Question>> GetQuestions() {
         return await db.Questions
             .Include(q => q.Subject)
             .ToListAsync();
     }
 
-    public async Task<List<Question>> GetQuestionsByPage(int pageNumber, int pageSize) {
+    public async Task<List<Question>> GetQuestionsByPage(int page, int size) {
         return await db.Questions
             .Include(q => q.Subject)
             .OrderByDescending(q => q.Date)
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
-    }
-
-    public async Task<List<Question>> ListQuestionsByNewest() {
-        return await db.Questions
-            .Include(q => q.Subject)
-            .OrderByDescending(q => q.Date)
+            .Skip((page - 1) * size)
+            .Take(size)
             .ToListAsync();
     }
 
@@ -47,7 +40,7 @@ public class DataService
             .FirstAsync();
     }
 
-    public async Task<List<Question>> ListQuestionsBySubjectId(int subjectId) {
+    public async Task<List<Question>> GetQuestionsBySubjectId(int subjectId) {
         Subject subject = await db.Subjects
             .Where(s => s.Id == subjectId)
             .FirstAsync();
@@ -62,16 +55,13 @@ public class DataService
             .Where(s => s.Id == subjectId)
             .FirstAsync();
 
-        Question question = new(subject, title, text, username, DateTime.Now)
-        {
-            Upvote = 1
-        };
+        Question question = new(subject, title, text, username);
 
         await db.Questions.AddAsync(question);
         await db.SaveChangesAsync();
 
         return JsonSerializer.Serialize(
-            new { msg = "New question created", newQuestion = question.Title }
+            new { msg = "New question created", newQuestion = question.Id, question.Title }
         );
     }
 
@@ -108,7 +98,7 @@ public class DataService
     // ---------------------------------------------------------------
     // -- Subjects --
 
-    public async Task<List<Subject>> ListSubjects() {
+    public async Task<List<Subject>> Getubjects() {
         return await db.Subjects
             .ToListAsync();
     }
@@ -122,10 +112,10 @@ public class DataService
     // ---------------------------------------------------------------
     // -- Answers --
 
-    public async Task<List<Answer>> ListAnswersByQuestionId(int questionId) {
+    public async Task<List<Answer>> GetAnswersByQuestionId(int questionId) {
         return await db.Questions
             .Where(q => q.Id == questionId)
-            .SelectMany(a => a.Answers)
+            .SelectMany(q => q.Answers)
             .ToListAsync();
     }
 
@@ -134,10 +124,7 @@ public class DataService
             .Where(q => q.Id == questionId)
             .FirstAsync();
 
-        Answer answer = new(question, text, username, DateTime.Now)
-        {
-            Upvote = 1
-        };
+        Answer answer = new(question, text, username);
 
         await db.Answers.AddAsync(answer);
         await db.SaveChangesAsync();
@@ -196,14 +183,14 @@ public class DataService
         Question question = db.Questions.FirstOrDefault()!;
         if (question == null)
         {
-            question = new Question(subject, "Teknisk spørgsmål", "Virker mit spørgsmål?", "Mikkel", DateTime.Now);
+            question = new Question(subject, "Teknisk spørgsmål", "Virker mit spørgsmål?", "Mikkel");
             db.Questions.Add(question);
         }
 
         Answer answer = db.Answers.FirstOrDefault()!;
         if (answer == null)
         {
-            answer = new Answer(question, "Ja, dit spørgsmål virker", "Simon", DateTime.Now);
+            answer = new Answer(question, "Ja, dit spørgsmål virker", "Simon");
             db.Answers.Add(answer);
         }
 

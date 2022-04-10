@@ -2,7 +2,7 @@
 
 using Models;
 
-namespace Data
+namespace API.Data
 {
 	public class ApplicationDbContext : DbContext
 	{
