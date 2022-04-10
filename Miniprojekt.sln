@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniprojektBlazor", "Minipr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MiniprojektAPI", "MiniprojektAPI\MiniprojektAPI.csproj", "{CB37AB46-DCA0-4102-88E4-59B07A3FF742}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A72D9F1E-5F6B-4007-9B51-C123777B0F80}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3082471A-FE83-4016-B972-10757E58346B}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 	EndProjectSection
