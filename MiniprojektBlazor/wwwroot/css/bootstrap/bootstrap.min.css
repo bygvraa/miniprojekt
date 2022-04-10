@@ -4978,8 +4978,8 @@ textarea.form-control-lg {
 .page-item.active .page-link {
     z-index: 3;
     color: #fff;
-    background-color: #0d6efd;
-    border-color: #0d6efd
+    background-color: var(--pagination-btn-color);
+    border-color: var(--pagination-btn-color);
 }
 
 .page-item.disabled .page-link {

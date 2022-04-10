@@ -91,13 +91,13 @@ else
 			<ul class="pagination">
 
 				<li class="page-item @PageStatus(PreviousPageStatus)">
-					<a class="page-link btn-no-focus"
+					<a class="page-link btn-pageination"
 						href="/questions?page=@PreviousPage"
 						@onclick="@(async () => await PageNavigation(PreviousPage))" >Forrige</a>
 				</li>
 
 				<li class="page-item @PageStatus(NextPageStatus)">
-					<a class="page-link btn-no-focus"
+					<a class="page-link btn-pageination"
 						href="/questions?page=@NextPage"
 						@onclick="@(async () => await PageNavigation(NextPage))" >Næste</a>
 				</li>
