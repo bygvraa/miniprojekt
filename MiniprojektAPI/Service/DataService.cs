@@ -98,7 +98,7 @@ public class DataService
     // ---------------------------------------------------------------
     // -- Subjects --
 
-    public async Task<List<Subject>> Getubjects() {
+    public async Task<List<Subject>> GetSubjects() {
         return await db.Subjects
             .ToListAsync();
     }
