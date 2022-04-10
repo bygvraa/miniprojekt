@@ -3,27 +3,32 @@
 @inject HttpClient http
 @inject AppDataService service
 
-@if (subject is null) {
-	<PageTitle>Emne</PageTitle>
-} else {
+@if (subject is not null) {
 	<PageTitle>Emne - @subject.Name</PageTitle>
+} else {
+	<PageTitle>Emne</PageTitle>
 }
 
 <div class="d-flex">
-	<h1 class="flex-grow-1 flex-shrink-1">
-		@if (subject is not null)
+	@if (subject is not null) {
+		<h1 class="flex-grow-1 flex-shrink-1">
 			@subject.Name
-	</h1>
+		</h1>
+		} else {
+		<h1 class="flex-grow-1 flex-shrink-1">
+			Emne
+		</h1>
+	}
 	<AskQuestionPrompt />
 </div>
 
-<p>Liste over emner</p>
+<p style="height: 24px"></p>
 
 @if (questions is null)
 {
 	<p>Indlæser...</p>
 }
-else if (questions.Length < 1)
+else if (questions.Length is 0)
 {
 	<p>Ingen spørgsmål i denne kategori.</p>
 }

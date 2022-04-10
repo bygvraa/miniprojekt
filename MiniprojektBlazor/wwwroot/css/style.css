@@ -88,6 +88,11 @@ a {
         box-shadow: 0 0 0 0.1rem var(--bs-btn-box-shadow);
     }
 
+.btn-no-focus {}
+    .btn-no-focus:focus {
+        box-shadow: unset;
+    }
+
 .subject-tag {
     color: #39739d;
     background-color: #00375e1f;
