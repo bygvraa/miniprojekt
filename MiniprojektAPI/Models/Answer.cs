@@ -13,16 +13,15 @@ namespace Models
 		public int Upvote { get; set; }
 		public int Downvote { get; set; }
 
-
-		// Konstruktører
-		public Answer() { }
-
-		public Answer(Question question, string text, string username, DateTime date) 
-		{ 
-			this.Question = question;
-			this.Text = text;
-			this.Username = username;
-			this.Date = date;
-		}
-	}
+        // Konstruktør
+        public Answer() { }
+        public Answer(Question question, string text, string username) {
+            Question = question;
+            Text = text;
+            Username = username;
+            Date = DateTime.Now;
+            Upvote = 1;
+            Downvote = 0;
+        }
+    }
 }

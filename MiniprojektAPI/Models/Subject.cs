@@ -8,11 +8,9 @@ namespace Models
 		public int Id { get; set;}
 		public string Name { get; set;}
 
-
 		// Konstruktør
-		public Subject(string name)
-		{
-			this.Name = name;
+		public Subject(string name)	{
+			Name = name;
 		}
 	}
 }
