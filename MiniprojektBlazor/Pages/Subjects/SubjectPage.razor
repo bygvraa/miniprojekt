@@ -34,20 +34,16 @@ else if (questions.Length is 0)
 }
 else
 {
-	@foreach (var question in questions)
-	{
-		<div class="card-group card-question-group">
+	<div class="card-group card-question-group">
+		@foreach (var question in questions)
+		{
 			<div class="card card-question bg-lite">
 				<div class="card-header card-question-header">
-					<div class="card-summary d-flex w-auto gap-2">
+					<div class="card-summary card-question-summary">
 						<div class="d-inline-flex gap-1">
 							<span class="mr-1">
 								@question.GetTotalVotes()
 							</span>
-						</div>
-						<div>
-							<span></span>
-							<span></span>
 						</div>
 					</div>
 				</div>
@@ -58,19 +54,17 @@ else
 								@question.Title
 							</a>
 						</h5>
-						<p class="card-text fw-mormal fs-6">
+						<p class="card-text card-question-text">
 							@question.GetShortText(300)
 						</p>
-					</div>
-					<div style="display: flex;align-items: center;flex-direction: column; float: right;">
 					</div>
 				</div>
 				<div class="card-footer card-question-footer">
 					<div>
 					</div>
-					<div class="card-user d-flex gap-1">
+					<div class="card-user">
 						<div class="card-user--info">
-							<p class="card-text flex-row">
+							<p class="card-text card-user-text">
 								<span class="oi oi-dashboard" style="color: @(service.GetColor(question.Username))" />
 								<span>
 									@question.Username
@@ -85,8 +79,8 @@ else
 					</div>
 				</div>
 			</div>
-		</div>
-	}
+		}
+	</div>
 }
 
 @code {
