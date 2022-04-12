@@ -139,7 +139,7 @@ public class AppDataService
 
         // 4.
         // Don't allow out of range values.
-        if (dayDiff < 0 || dayDiff >= 31)
+        if (dayDiff < 0)
         {
             return null;
         }
@@ -194,10 +194,27 @@ public class AppDataService
         }
         if (dayDiff < 31)
         {
-            return string.Format("for {0} uger siden",
-                Math.Ceiling((double)dayDiff / 7));
+            var weeks = Math.Ceiling((double)dayDiff / 7);
+
+            if (weeks == 1)
+            {
+                return "for 1 uge siden";
+            }
+            else
+            {
+                return string.Format("for {0} uger siden",
+                    weeks);
+            }
         }
-        return null;
+        if (dayDiff is > 31 and < 38)
+        {
+            return "for 1 måned siden";
+        }
+        else
+        {
+            return string.Format("for {0} dage siden",
+                    dayDiff);
+        }
     }
 
 }
