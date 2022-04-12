@@ -23,9 +23,6 @@ else
 	<div class="card-group card-question-group">
 		@foreach (var question in questions)
 		{
-			<div class="rank">
-				@*@(index++)*@
-			</div>
 			<div class="card card-question bg-lite">
 				<div class="card-header card-question-header">
 					<div class="card-summary card-question-summary">
@@ -34,15 +31,11 @@ else
 								@question.GetTotalVotes()
 							</span>
 						</div>
-						<div>
-							<span></span>
-							<span></span>
-						</div>
 					</div>
 				</div>
-				<div class="card-body">
+				<div class="card-body" style="padding: .5rem 1rem;">
 					<div style="float: left">
-						<h5 class="card-title card-quest-title">
+						<h5 class="card-title card-question-title">
 							<a class="text-decoration-none" href="/questions/@question.Id/">
 								@question.Title
 							</a>
