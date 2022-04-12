@@ -24,14 +24,25 @@ namespace Data
         }
 
         // Metoder
-        public int GetScore()
-        {
+        public int GetScore() {
             return Upvote - Downvote;
         }
 
-        public int GetTotalVotes()
-        {
-            return Upvote + Downvote;
+        public string GetTotalVotes() {
+            var votes = Upvote + Downvote;
+
+            if (votes == 1)
+                return $"1 stemme";
+            else
+                return $"{votes} stemmer";
         }
+
+        public string GetShortText(int limit) {
+            if (Text.Length < limit)
+                return $"{Text}";
+            else
+                return $"{Text[..limit]} ...";
+        }
+
     }
 }

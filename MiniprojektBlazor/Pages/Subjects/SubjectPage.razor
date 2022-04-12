@@ -42,16 +42,8 @@ else
 					<div class="card-summary d-flex w-auto gap-2">
 						<div class="d-inline-flex gap-1">
 							<span class="mr-1">
-								@question.GetScore()
+								@question.GetTotalVotes()
 							</span>
-							@if (@question.GetScore() == 1)
-							{
-								<span>stemme</span>
-							}
-							else
-							{
-								<span>stemmer</span>
-							}
 						</div>
 						<div>
 							<span></span>
@@ -67,7 +59,7 @@ else
 							</a>
 						</h5>
 						<p class="card-text fw-mormal fs-6">
-							@question.Text
+							@question.GetShortText(300)
 						</p>
 					</div>
 					<div style="display: flex;align-items: center;flex-direction: column; float: right;">
@@ -86,7 +78,6 @@ else
 							</p>
 						</div>
 						<time class="card-user--time">
-							<span>spurgte</span>
 							<span title="@question.Date" class="relativetime">
 								@(service.GetPrettyDate(@question.Date))
 							</span>
