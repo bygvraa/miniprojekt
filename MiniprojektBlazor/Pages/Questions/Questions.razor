@@ -5,12 +5,14 @@
 
 <PageTitle>Spørgsmål</PageTitle>
 
-<div class="d-flex">
+<div class="title d-flex">
 	<h1 class="flex-grow-1 flex-shrink-1">Spørgsmål</h1>
 	<AskQuestionPrompt />
 </div>
 
-<p>Nyeste spørgsmål</p>
+<div class="subtitle">
+	<p>Nyeste spørgsmål</p>
+</div>
 
 @if (questions is null)
 {
@@ -18,74 +20,63 @@
 }
 else
 {
-	@foreach (var question in questions)
-	{
-		<div>
+	<div class="card-group card-question-group">
+		@foreach (var question in questions)
+		{
 			<div class="rank">
 				@*@(index++)*@
 			</div>
-			<div class="card-group card-question-group">
-				<div class="card card-question bg-lite">
-					<div class="card-header card-question-header">
-						<div class="card-summary card-question-summary">
-							<div class="d-inline-flex gap-1">
-								<span class="mr-1">
-								   @question.GetScore()
-								</span>
-								@if (@question.GetScore() == 1)
-								{
-									<span>stemme</span>
-								}
-								else
-								{
-									<span>stemmer</span>
-								}
-							</div>
-							<div>
-								<span></span>
-								<span></span>
-							</div>
+			<div class="card card-question bg-lite">
+				<div class="card-header card-question-header">
+					<div class="card-summary card-question-summary">
+						<div class="d-inline-flex gap-1">
+							<span class="mr-1">
+								@question.GetTotalVotes()
+							</span>
 						</div>
-					</div>
-					<div class="card-body">
-						<div style="float: left">
-							<h5 class="card-title card-quest-title">
-								<a class="text-decoration-none" href="/questions/@question.Id/">
-									@question.Title
-								</a>
-							</h5>
-							<p class="card-text card-question-text">
-								@question.Text
-							</p>
-						</div>
-					</div>
-					<div class="card-footer card-question-footer">
-						<div class="subject-tag">
-							<a class="a-link text-decoration-none" href="/subjects/@question.Subject.Id/">
-								@question.Subject.Name
-							</a>
-						</div>
-						<div class="card-user d-flex">
-							<div class="card-user--info">
-								<p class="card-text card-user-text">
-									<span class="oi oi-dashboard" style="color: @(service.GetColor(question.Username))" />
-									<span>
-										@question.Username
-									</span>
-								</p>
-							</div>
-							<time class="card-user--time">
-								<span>spurgte</span>
-								<span title="@question.Date" class="relativetime">
-									@(service.GetPrettyDate(@question.Date))
-								</span>
-							</time>
+						<div>
+							<span></span>
+							<span></span>
 						</div>
 					</div>
 				</div>
+				<div class="card-body">
+					<div style="float: left">
+						<h5 class="card-title card-quest-title">
+							<a class="text-decoration-none" href="/questions/@question.Id/">
+								@question.Title
+							</a>
+						</h5>
+						<p class="card-text card-question-text">
+							@question.GetShortText(300)
+						</p>
+					</div>
+				</div>
+				<div class="card-footer card-question-footer">
+					<div class="subject-tag">
+						<a class="a-link text-decoration-none" href="/subjects/@question.Subject.Id/">
+							@question.Subject.Name
+						</a>
+					</div>
+					<div class="card-user d-flex">
+						<div class="card-user--info">
+							<p class="card-text card-user-text">
+								<span class="oi oi-dashboard" style="color: @(service.GetColor(question.Username))" />
+								<span>
+									@question.Username
+								</span>
+							</p>
+						</div>
+						<time class="card-user--time">
+							<span title="@question.Date" class="relativetime">
+								@(service.GetPrettyDate(@question.Date))
+							</span>
+						</time>
+					</div>
+				</div>
 			</div>
-		</div>
-	}
+		}
+	</div>
 	<div>
 		<nav aria-label="...">
 			<ul class="pagination">
@@ -93,13 +84,17 @@ else
 				<li class="page-item @PageStatus(PreviousPageStatus)">
 					<a class="page-link btn-pageination"
 						href="/questions?page=@PreviousPage"
-						@onclick="@(async () => await PageNavigation(PreviousPage))" >Forrige</a>
+						@onclick="@(async () => await PageNavigation(PreviousPage))" >
+						Forrige
+					</a>
 				</li>
 
 				<li class="page-item @PageStatus(NextPageStatus)">
 					<a class="page-link btn-pageination"
 						href="/questions?page=@NextPage"
-						@onclick="@(async () => await PageNavigation(NextPage))" >Næste</a>
+						@onclick="@(async () => await PageNavigation(NextPage))" >
+						Næste
+					</a>
 				</li>
 
 			</ul>
@@ -119,37 +114,22 @@ else
 	public string PreviousPageStatus = "disabled";
 
 	private QuestionData[]? questions;
+	private QuestionData[]? questionsNextPage;
 
-	protected override async Task OnInitializedAsync()
-	{
+
+	protected override async Task OnInitializedAsync() {
 		// I tilfælde af, at man navigerer ind på ".../questions/",
 		// eller hvis 'Page' er lavere end 1, så bliver 'Page = 1',
 		// og man kommer derved ind på den første side med spørgsmål.
-		@if (Page is null or < 1)
-		{
+		@if (Page is null or < 1) {
 			Page = 1;
 		}
 
-		questions = await GetQuestionsByPage(Page);
-
-
-		NextPage = Page + 1;
-
-		@if (Page is not 1)
-		{
-			PreviousPage = Page - 1;
-			PreviousPageStatus = "active";
-		}
-
-		@if ((await GetQuestionsByPage(NextPage))?.Count() is not 0)
-		{
-			NextPageStatus = "active";
-		}
+		await PageNavigation(Page);
 	}
 
-	protected async Task<QuestionData[]?> GetQuestionsByPage(int? page)
-	{
-		return await service.GetQuestionsByPage(page, 3);
+	protected async Task<QuestionData[]?> GetQuestionsByPage(int? page) {
+		return await service.GetQuestionsByPage(page, 4);
 	}
 
 
@@ -157,35 +137,29 @@ else
 	{
 		questions = await GetQuestionsByPage(page);
 
-		@if (Page is not 1)
-		{
-			// hvis man ikke er på den første side i pagination
+		@if (Page is not 1) {
+			// hvis man IKKE er på den første side
 			PreviousPage = Page - 1;
 			PreviousPageStatus = "active";
-		}
-		else
-		{
+		} else {
 			// hvis man er på den første side
 			PreviousPageStatus = "disabled";
 		}
 
 		NextPage = Page + 1;
-		@if ((await GetQuestionsByPage(NextPage))?.Count() is not 0)
-		{
+		questionsNextPage = await GetQuestionsByPage(NextPage);
+
+		@if (questionsNextPage?.Count() is not 0) {
 			// hvis der er spørgsmål på næste side
 			NextPageStatus = "active";
-		}
-		else
-		{
+		} else {
 			// hvis der IKKE er spørgsmål på næste side
 			NextPageStatus = "disabled";
 		}
 	}
 
-	protected string PageStatus(string status)
-	{	
+	protected string PageStatus(string status) {	
 		return status;
 	}
-
 
 }
