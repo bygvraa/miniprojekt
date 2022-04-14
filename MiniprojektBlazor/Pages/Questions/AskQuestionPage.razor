@@ -13,43 +13,55 @@
 	<EditForm Model="@newQuestion" OnValidSubmit="@CreateQuestion">
 
 		<div class="form-group">
-			<label for="Subject" class="col-form-label">
-				Emne
-			</label>
-			<select id="Subject" class="form-control" @bind="SubjectId">
-				@if (subjects is not null)
-				{
-				<option>--- Vælg et emne ---</option>
-					@foreach (var subject in subjects)
-					{
-						<option value="@subject.Id">@subject.Name</option>
-					}
-				}
-			</select>
-		</div>
-
-		<div class="form-group">
 			<label for="Title" class="col-form-label">
 				Overskrift
 			</label>
-			<InputText id="Title" class="form-control" placeholder="Overskrift på spørgsmålet" 
-			@bind-Value="newQuestion.Title" />
+			<input type="text" id="Title" class="form-control" 
+				placeholder="Overskrift på spørgsmålet" 
+				minlength="2"
+				maxlength="150"	
+				@bind="newQuestion.Title" required />
 		</div>
 
 		<div class="form-group">
 			<label for="Text" class="col-form-label">
 				Spørgsmål
 			</label>
-			<InputTextArea id="Text" class="form-control" placeholder="Skriv dit spørgsmål" 
-			@bind-Value="newQuestion.Text" />
+			<textarea id="Text" class="form-control" 
+				placeholder="Skriv et spørgsmål" 
+				minlength="10"
+				maxlength="300"
+				@bind="newQuestion.Text" required />
+		</div>
+
+		<div class="form-group">
+			<label for="Subject" class="col-form-label">
+				Emne
+			</label>
+			<select id="Subject" class="form-select"
+				@bind="SubjectId" required >
+
+				@if (subjects is not null)
+				{
+				<option selected>Vælg et emne...</option>
+					@foreach (var subject in subjects)
+					{
+						<option value="@subject.Id">@subject.Name</option>
+					}
+				}
+
+			</select>
 		</div>
 
 		<div class="form-group">
 			<label for="Username" class="col-form-label">
 				Navn
 			</label>
-			<InputText id="Username" class="form-control" placeholder="Skriv dit navn" 
-			@bind-Value="newQuestion.Username" />
+			<input type="text" id="Username" class="form-control" 
+				placeholder="Skriv dit navn"
+				minlength="2"
+				maxlength="12"
+				@bind="newQuestion.Username" required />
 		</div>
 
 		<button type="submit" class="btn btn-qna btn-submit">
@@ -72,13 +84,19 @@
 
 	private async Task CreateQuestion()
 	{
+		var _username = FormatName(newQuestion.Username);
 		var _subject = await service.GetSubjectById(SubjectId);
 
+		newQuestion.Username = _username;
 		newQuestion.Subject = _subject!;
 
 		await service.CreateQuestion(newQuestion);
 
 		navigation.NavigateTo("questions");
+	}
+
+	private string FormatName(string name) {
+		return char.ToUpper(name[0]) + name.Substring(1).ToLower();
 	}
 
 }

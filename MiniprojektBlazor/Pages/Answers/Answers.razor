@@ -28,42 +28,62 @@ else
 						</time>
 					</div>
 				</div>
-				<div class="card-body">
-					<div style="float: left">
-						<p>@answer.Text</p>
+				<div class="card-body card-answer-body">
+					<div class="card-left">
+						<div>
+							<p>@answer.Text</p>
+						</div>
 					</div>
-					<div class="vote-body">
-						<button class="btn btn-vote up"
-						@onclick="(async () => await UpvoteAnswer(answer))">
-							<span class="oi oi-chevron-top"></span>
-						</button>
-						<span class="text-center flex-column">
-							@answer.GetScore()
-						</span>
-						<button class="btn btn-vote down"
-						@onclick="(async () => await DownvoteAnswer(answer))">
-							<span class="oi oi-chevron-bottom"></span>
-						</button>
+
+					<div class="card-right">
+						<div class="vote-body">
+							<button class="btn btn-vote up"
+							@onclick="(async () => await UpvoteAnswer(answer))">
+								<span class="oi oi-chevron-top"></span>
+							</button>
+							<span class="text-center flex-column">
+								@answer.GetScore()
+							</span>
+							<button class="btn btn-vote down"
+							@onclick="(async () => await DownvoteAnswer(answer))">
+								<span class="oi oi-chevron-bottom"></span>
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
 		}
 	</div>
+
 	<div class="card card-answerbox bg-lite">
 		<EditForm Model="@newAnswer" OnValidSubmit="@CreateAnswer">
+
 			<div class="form-group">
-				<label for="answerText" class="col-sm-2 col-form-label">Svar</label>
-				<InputTextArea class="form-control col-sm-2" id="answerText" placeholder="Skriv et svar" @bind-Value="@newAnswer.Text" />
+				<label for="Text" class="col-form-label">
+					Svar
+				</label>
+				<textarea id="Text" class="form-control" 
+					placeholder="Skriv et svar" 
+					minlength="10"
+					maxlength="300"
+					@bind="@newAnswer.Text" required/>
 			</div>
 
 			<div class="form-group">
-				<label for="answerUsername" class="col-sm-2 col-form-label">Navn</label>
-				<InputText class="form-control" id="answerUsername" placeholder="Skriv dit navn" @bind-Value="@newAnswer.Username" />
+				<label for="Username" class="col-form-label">
+					Navn
+				</label>
+				<input type="text" id="Username" class="form-control" 
+					placeholder="Skriv dit navn" 
+					minlength="2"
+					maxlength="12"
+					@bind="@newAnswer.Username" required/>
 			</div>
 
-			<button type="submit" class="btn btn-qna btn-submit m-2">
+			<button type="submit" class="btn btn-qna btn-submit">
 				Besvar
 			</button>
+
 		</EditForm>
 	</div>
 }
@@ -88,9 +108,14 @@ else
 
 	private async Task CreateAnswer()
 	{
+		var _username = FormatName(newAnswer.Username);
+
+		newAnswer.Username = _username;
 		newAnswer.QuestionId = QuestionId;
+
 		await service.CreateAnswer(newAnswer);
 		await ListAnswers();
+		newAnswer = new() { };
 	}
 
 	private async Task UpvoteAnswer(AnswerData answer)
@@ -105,6 +130,10 @@ else
 		answer.QuestionId = QuestionId;
 		await service.DownvoteAnswer(answer);
 		await ListAnswers();
+	}
+
+	private string FormatName(string name) {
+		return char.ToUpper(name[0]) + name.Substring(1).ToLower();
 	}
 
 }
