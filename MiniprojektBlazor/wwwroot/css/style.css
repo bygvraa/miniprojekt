@@ -90,6 +90,8 @@ a {
 
 .btn-submit {
     background-color: var(--bs-color-2);
+    border-radius: 6px;
+    margin: .5rem;
 }
 
 .subject-tag {
