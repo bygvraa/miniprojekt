@@ -44,5 +44,9 @@ namespace Data
                 return $"{Text[..limit]} ...";
         }
 
+        public string GetPrettyName() {
+            return char.ToUpper(Username[0]) + Username[1..].ToLower();
+        }
+
     }
 }

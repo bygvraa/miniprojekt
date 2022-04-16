@@ -1,6 +1,8 @@
 ﻿@inject HttpClient http
 @inject AppDataService service
 
+@* Dette er en component, der bruges på QuestionPage.razor til at vise svarene til et spørgsmål. *@
+
 @if (answers is null)
 {
 	<p>Ingen har svart på dette spørgsmål endnu.</p>
@@ -15,7 +17,7 @@ else
 					<div class="card-user d-flex gap-1" style="font-size: small">
 						<div class="card-user--info d-inline-flex gap-1">
 							<span class="oi oi-dashboard mt-1 gap-1" 
-								style="color: @(service.GetColor(answer.Username)); font-size: smaller; " />
+								style="color: @(service.GetColor(answer.GetPrettyName())); font-size: smaller; " />
 							<span>
 								@answer.Username
 							</span>
@@ -66,7 +68,7 @@ else
 					placeholder="Skriv et svar" 
 					minlength="10"
 					maxlength="300"
-					@bind="@newAnswer.Text" required/>
+					@bind="@newAnswer.Text" required />
 			</div>
 
 			<div class="form-group">
@@ -77,7 +79,7 @@ else
 					placeholder="Skriv dit navn" 
 					minlength="2"
 					maxlength="12"
-					@bind="@newAnswer.Username" required/>
+					@bind="@newAnswer.Username" required />
 			</div>
 
 			<button type="submit" class="btn btn-qna btn-submit">
@@ -98,23 +100,20 @@ else
 
 	protected override async Task OnInitializedAsync()
 	{
-		await ListAnswers();
+		await GetAnswers();
 	}
 
-	private async Task ListAnswers()
+	private async Task GetAnswers()
 	{
 		answers = await service.GetAnswersById(QuestionId);
 	}
 
 	private async Task CreateAnswer()
 	{
-		var _username = FormatName(newAnswer.Username);
-
-		newAnswer.Username = _username;
 		newAnswer.QuestionId = QuestionId;
 
 		await service.CreateAnswer(newAnswer);
-		await ListAnswers();
+		await GetAnswers();
 		newAnswer = new() { };
 	}
 
@@ -122,18 +121,14 @@ else
 	{
 		answer.QuestionId = QuestionId;
 		await service.UpvoteAnswer(answer);
-		await ListAnswers();
+		await GetAnswers();
 	}
 
 	private async Task DownvoteAnswer(AnswerData answer)
 	{
 		answer.QuestionId = QuestionId;
 		await service.DownvoteAnswer(answer);
-		await ListAnswers();
-	}
-
-	private string FormatName(string name) {
-		return char.ToUpper(name[0]) + name.Substring(1).ToLower();
+		await GetAnswers();
 	}
 
 }

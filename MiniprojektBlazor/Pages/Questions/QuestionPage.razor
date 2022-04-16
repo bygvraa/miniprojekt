@@ -1,5 +1,7 @@
 ﻿@page "/questions/{QuestionId:int}/"
 
+@* Denne side viser ét specifikt spørgsmål, samt eventuelle svar på dette spørgsmål. *@
+
 @inject HttpClient http
 @inject AppDataService service
 
@@ -25,7 +27,7 @@ else
 						@question.Title
 					</h5>
 				</div>
-				<div class="card-user d-flex text-nowrap" style="font-size: smaller">
+				<div class="card-user d-flex text-nowrap small">
 					<time class="card-user--time">
 						<span>Indsendt</span>
 						<span title="@question.Date" class="relativetime">
@@ -33,11 +35,9 @@ else
 						</span>
 					</time>
 					<div class="card-user--info">
-						<span>
-							af
-						</span>
+						<span>af</span>
 						<span class="oi oi-dashboard mt-1" 
-							style="color: @(service.GetColor(question.Username)); font-size: smaller; " />
+							style="color: @(service.GetColor(question.GetPrettyName())); font-size: smaller; " />
 						<span>
 							@question.Username
 						</span>

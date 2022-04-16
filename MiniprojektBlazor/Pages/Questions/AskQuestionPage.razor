@@ -1,13 +1,15 @@
 ﻿@page "/questions/ask"
 
+@* Dette er siden, hvor man kan indsende et spørgsmål. *@
+
 @inject HttpClient http
 @inject AppDataService service
 @inject NavigationManager navigation
 
 <PageTitle>Stil et spørgsmål</PageTitle>
 
-<h3>Stil et spørgsmål</h3>
 
+<h3>Stil et spørgsmål</h3>
 
 <div class="card card-askpage bg-lite">
 	<EditForm Model="@newQuestion" OnValidSubmit="@CreateQuestion">

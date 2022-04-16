@@ -19,10 +19,13 @@
             this.Username = Username;
         }
 
-        // Metode
-        public int GetScore()
-        {
+        // Metoder
+        public int GetScore() {
             return Upvote - Downvote;
+        }
+
+        public string GetPrettyName() {
+            return char.ToUpper(Username[0]) + Username[1..].ToLower();
         }
     }
 
