@@ -6,7 +6,7 @@ name: Build and deploy ASP.Net Core app to Azure Web App - mikkelapp
 on:
   push:
     branches:
-      - mssql
+      - master
   workflow_dispatch:
 
 jobs:
