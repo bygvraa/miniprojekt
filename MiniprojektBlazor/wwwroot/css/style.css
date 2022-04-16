@@ -23,6 +23,12 @@ body {
     background-color: var(--bs-lite-body-bg);
 }
 
+.loading {
+    height: 50vh;
+    margin-top: 20vh;
+    text-align: center;
+}
+
 a {
     color: var(--bs-color-2);
 }
@@ -284,7 +290,8 @@ a {
 
 @media (min-width: 1400px) {
     .container, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl {
-    max-width: 100%;
+        max-width: 100%;
+    }
 }
 
 @media (min-width: 576px) {
@@ -312,6 +319,7 @@ a {
     .card-question-title {
         font-size: 1.2rem;
     }
+
     .card-answerbox {
         margin: 1rem -1rem 1rem -1rem;
     }
