@@ -108,9 +108,8 @@ else
 	public string NextPageStatus = "disabled";
 	public string PreviousPageStatus = "disabled";
 
-	private QuestionData[]? questions;
-	private QuestionData[]? questionsNextPage;
-
+	private Question[]? questions;
+	private Question[]? questionsNextPage;
 
 	protected override async Task OnInitializedAsync() {
 		// I tilfælde af, at man navigerer ind på ".../questions/",
@@ -123,10 +122,10 @@ else
 		await PageNavigation(Page);
 	}
 
-	protected async Task<QuestionData[]?> GetQuestionsByPage(int? page) {
+	protected async Task<Question[]?> GetQuestionsByPage(int? page)
+	{
 		return await service.GetQuestionsByPage(page, 4);
 	}
-
 
 	protected async Task PageNavigation(int? page)
 	{
@@ -153,7 +152,8 @@ else
 		}
 	}
 
-	protected string PageStatus(string status) {	
+	protected string PageStatus(string status)
+	{	
 		return status;
 	}
 

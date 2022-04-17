@@ -80,7 +80,7 @@ else
 	[Parameter]
 	public int QuestionId { get; set; }
 
-	private QuestionData? question;
+	private Question? question;
 
 	protected override async Task OnInitializedAsync()
 	{
@@ -92,15 +92,20 @@ else
 		question = await service.GetQuestionById(QuestionId);
 	}
 
-	private async Task UpvoteQuestion(QuestionData question)
+	private async Task UpvoteQuestion(Question q)
 	{
+		var question = new QuestionData(q.Id, q.Subject.Id, q.Title, q.Text, q.Username);
+
 		await service.UpvoteQuestion(question);
 		await GetQuestion();
 	}
 
-	private async Task DownvoteQuestion(QuestionData question)
+	private async Task DownvoteQuestion(Question q)
 	{
+		var question = new QuestionData(q.Id, q.Subject.Id, q.Title, q.Text, q.Username);
+
 		await service.DownvoteQuestion(question);
 		await GetQuestion();
 	}
+
 }

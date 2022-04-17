@@ -1,6 +1,6 @@
 using System;
 
-namespace Models
+namespace DataAccess.Models
 {
     public class Question
     {
@@ -28,6 +28,31 @@ namespace Models
             Upvote = 1;
             Downvote = 0;
             Answers = new List<Answer>();
+        }
+
+        // Metoder
+        public int GetScore() {
+            return Upvote - Downvote;
+        }
+
+        public string GetTotalVotes() {
+            var votes = Upvote + Downvote;
+
+            if (votes == 1)
+                return $"1 stemme";
+            else
+                return $"{votes} stemmer";
+        }
+
+        public string GetShortText(int limit) {
+            if (Text.Length < limit)
+                return $"{Text}";
+            else
+                return $"{Text[..limit]} ...";
+        }
+
+        public string GetPrettyName() {
+            return char.ToUpper(Username[0]) + Username[1..].ToLower();
         }
     }
 }

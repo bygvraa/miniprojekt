@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using System.Text.Json;
-using Data;
+using DataAccess.Data;
+using DataAccess.Models;
 
 namespace Service;
 
@@ -20,28 +21,28 @@ public class AppDataService
     // -----------------------------------------------------
     // -- Questions
 
-    public async Task<QuestionData[]?> GetQuestions() {
+    public async Task<Question[]?> GetQuestions() {
         var url = $"{baseAPI}questions";
-        return await http.GetFromJsonAsync<QuestionData[]>(url);
+        return await http.GetFromJsonAsync<Question[]>(url);
     }
 
-    public async Task<QuestionData[]?> GetQuestionsByPage(int? pageNumber, int pageSize) {
+    public async Task<Question[]?> GetQuestionsByPage(int? pageNumber, int pageSize) {
         var url = $"{baseAPI}questions/?page={pageNumber}&size={pageSize}";
-        return await http.GetFromJsonAsync<QuestionData[]>(url);
+        return await http.GetFromJsonAsync<Question[]>(url);
     }
 
-    public async Task<QuestionData?> GetQuestionById(int id) {
+    public async Task<Question?> GetQuestionById(int id) {
         var url = $"{baseAPI}questions/{id}";
-        return await http.GetFromJsonAsync<QuestionData>(url);
+        return await http.GetFromJsonAsync<Question>(url);
     }
 
-    public async Task<QuestionData[]?> GetQuestionsBySubjectId(int id) {
+    public async Task<Question[]?> GetQuestionsBySubjectId(int id) {
         var url = $"{baseAPI}questions/{id}/subject";
-        return await http.GetFromJsonAsync<QuestionData[]>(url);
+        return await http.GetFromJsonAsync<Question[]>(url);
     }
 
     public async Task CreateQuestion(QuestionData q) {
-        var data = new QuestionDataAPI(q.Subject.Id, q.Title, q.Text, q.Username);
+        var data = new QuestionDataAPI(q.SubjectId, q.Title, q.Text, q.Username);
 
         var url = $"{baseAPI}questions/";
         await http.PostAsJsonAsync(url, data);
@@ -60,9 +61,9 @@ public class AppDataService
     // -----------------------------------------------------
     // -- Answers
 
-    public async Task<AnswerData[]?> GetAnswersById(int id) {
+    public async Task<Answer[]?> GetAnswersById(int id) {
         var url = $"{baseAPI}answers/{id}/question";
-        return await http.GetFromJsonAsync<AnswerData[]>(url);
+        return await http.GetFromJsonAsync<Answer[]>(url);
     }
 
     public async Task CreateAnswer(AnswerData a) {
@@ -85,14 +86,14 @@ public class AppDataService
     // -----------------------------------------------------
     // -- Subjects
 
-    public async Task<SubjectData[]?> GetSubjects() {
+    public async Task<Subject[]?> GetSubjects() {
         var url = $"{baseAPI}subjects";
-        return await http.GetFromJsonAsync<SubjectData[]>(url);
+        return await http.GetFromJsonAsync<Subject[]>(url);
     }
 
-    public async Task<SubjectData?> GetSubjectById(int id) {
+    public async Task<Subject?> GetSubjectById(int id) {
         var url = $"{baseAPI}subjects/{id}";
-        return await http.GetFromJsonAsync<SubjectData>(url);
+        return await http.GetFromJsonAsync<Subject>(url);
     }
 
     // -----------------------------------------------------

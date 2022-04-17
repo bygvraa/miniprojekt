@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-using Models;
+using DataAccess.Models;
 
 namespace API.Data
 {

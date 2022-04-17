@@ -1,4 +1,4 @@
-﻿namespace Data
+﻿namespace DataAccess.Data
 {
     public class SubjectData
     {

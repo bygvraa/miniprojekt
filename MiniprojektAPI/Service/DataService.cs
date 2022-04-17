@@ -3,7 +3,7 @@ using System.Text.Json;
 using System;
 
 using API.Data;
-using Models;
+using DataAccess.Models;
 
 namespace Service;
 

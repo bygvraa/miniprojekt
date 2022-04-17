@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Models
+namespace DataAccess.Models
 {
 	public class Subject
 	{

@@ -12,7 +12,7 @@
 
 <div class="card card-askpage bg-lite">
 	<EditForm EditContext="@editContext" OnValidSubmit="@HandleValidSubmit">
-		<ObjectGraphDataAnnotationsValidator />
+		<DataAnnotationsValidator />
 
 		<div class="form-group">
 			<label for="Title" class="col-form-label">
@@ -39,13 +39,11 @@
 				Emne
 			</label>
 			<InputSelect id="Subject" class="form-select"
-						 DisplayName="Emne"
-						 ParsingErrorMessage="Vælg et emne"
-						 @bind-Value="SubjectId">
+						 @bind-Value="question.SubjectId">
 
 				@if (subjects is not null)
 				{
-					<option selected>Vælg et emne...</option>
+					<option>Vælg et emne...</option>
 					@foreach (var subject in subjects)
 					{
 						<option value="@subject.Id">@subject.Name</option>
@@ -66,7 +64,7 @@
 		</div>
 
 		<button type="submit" class="btn btn-qna btn-submit"
-			disabled="@formInvalid">
+			disabled="@formInvalid" >
 			Send
 		</button>
 
@@ -76,23 +74,24 @@
 
 @code {
 	private int? SubjectId;
-	private SubjectData[]? subjects;
-    private QuestionData question = new() { };
+	private Subject[]? subjects;
+	private QuestionData question = new() { };
 
-    protected override async Task OnInitializedAsync()
-    {
+	protected override async Task OnInitializedAsync()
+	{
 		editContext = new(question);
 		editContext.OnFieldChanged += HandleFieldChanged;
 
+		await GetSubjects();
+	}
+
+	private async Task GetSubjects()
+	{
 		subjects = await service.GetSubjects();
 	}
 
 	private async Task CreateQuestion()
 	{
-		question.Subject = subjects!
-			.Where(s => s.Id == SubjectId)
-			.First();
-
 		await service.CreateQuestion(question);
 
 		navigation.NavigateTo("questions");
@@ -110,12 +109,14 @@
 			if (question.Title is not null &&
 				question.Text is not null &&
 				question.Username is not null &&
+				question.SubjectId is not 0 &&
 				SubjectId is not null)
 			{
 				formInvalid = !editContext.Validate();
 				StateHasChanged();
 			}
 			StateHasChanged();
+			SubjectId = question.SubjectId;
 		}
 	}
 

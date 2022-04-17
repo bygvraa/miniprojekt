@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Models
+namespace DataAccess.Models
 {
 	public class Answer
 	{
@@ -22,6 +22,15 @@ namespace Models
             Date = DateTime.Now;
             Upvote = 1;
             Downvote = 0;
+        }
+
+        // Metoder
+        public int GetScore() {
+            return Upvote - Downvote;
+        }
+
+        public string GetPrettyName() {
+            return char.ToUpper(Username[0]) + Username[1..].ToLower();
         }
     }
 }
