@@ -8,65 +8,65 @@
 
 <PageTitle>Stil et spørgsmål</PageTitle>
 
-
 <h3>Stil et spørgsmål</h3>
 
 <div class="card card-askpage bg-lite">
-	<EditForm Model="@newQuestion" OnValidSubmit="@CreateQuestion">
+	<EditForm EditContext="@editContext" OnValidSubmit="@HandleValidSubmit">
+		<ObjectGraphDataAnnotationsValidator />
 
 		<div class="form-group">
 			<label for="Title" class="col-form-label">
 				Overskrift
 			</label>
-			<input type="text" id="Title" class="form-control" 
-				placeholder="Overskrift på spørgsmålet" 
-				minlength="2"
-				maxlength="150"	
-				@bind="newQuestion.Title" required />
+			<InputText id="Title" class="form-control"
+					   placeholder="Overskrift på spørgsmålet"
+					   @bind-Value="question.Title" />
+			<ValidationMessage For="() => question.Title" />
 		</div>
 
 		<div class="form-group">
 			<label for="Text" class="col-form-label">
 				Spørgsmål
 			</label>
-			<textarea id="Text" class="form-control" 
-				placeholder="Skriv et spørgsmål" 
-				minlength="10"
-				maxlength="300"
-				@bind="newQuestion.Text" required />
+			<InputTextArea id="Text" class="form-control"
+						   placeholder="Skriv et spørgsmål" rows="6"
+						   @bind-Value="question.Text" />
+			<ValidationMessage For="() => question.Text" />
 		</div>
 
 		<div class="form-group">
 			<label for="Subject" class="col-form-label">
 				Emne
 			</label>
-			<select id="Subject" class="form-select"
-				@bind="SubjectId" required >
+			<InputSelect id="Subject" class="form-select"
+						 DisplayName="Emne"
+						 ParsingErrorMessage="Vælg et emne"
+						 @bind-Value="SubjectId">
 
 				@if (subjects is not null)
 				{
-				<option selected>Vælg et emne...</option>
+					<option selected>Vælg et emne...</option>
 					@foreach (var subject in subjects)
 					{
 						<option value="@subject.Id">@subject.Name</option>
 					}
 				}
+			</InputSelect>
 
-			</select>
 		</div>
 
 		<div class="form-group">
 			<label for="Username" class="col-form-label">
 				Navn
 			</label>
-			<input type="text" id="Username" class="form-control" 
-				placeholder="Skriv dit navn"
-				minlength="2"
-				maxlength="12"
-				@bind="newQuestion.Username" required />
+			<InputText id="Username" class="form-control"
+					   placeholder="Skriv dit navn"
+					   @bind-Value="question.Username" />
+			<ValidationMessage For="() => question.Username" />
 		</div>
 
-		<button type="submit" class="btn btn-qna btn-submit">
+		<button type="submit" class="btn btn-qna btn-submit"
+			disabled="@formInvalid">
 			Send
 		</button>
 
@@ -75,30 +75,55 @@
 
 
 @code {
-	private int SubjectId;
+	private int? SubjectId;
 	private SubjectData[]? subjects;
-	public QuestionData newQuestion = new() { };
+    private QuestionData question = new() { };
 
-	protected override async Task OnInitializedAsync()
-	{
+    protected override async Task OnInitializedAsync()
+    {
+		editContext = new(question);
+		editContext.OnFieldChanged += HandleFieldChanged;
+
 		subjects = await service.GetSubjects();
 	}
 
 	private async Task CreateQuestion()
 	{
-		var _username = FormatName(newQuestion.Username);
-		var _subject = await service.GetSubjectById(SubjectId);
+		question.Subject = subjects!
+			.Where(s => s.Id == SubjectId)
+			.First();
 
-		newQuestion.Username = _username;
-		newQuestion.Subject = _subject!;
-
-		await service.CreateQuestion(newQuestion);
+		await service.CreateQuestion(question);
 
 		navigation.NavigateTo("questions");
 	}
 
-	private string FormatName(string name) {
-		return char.ToUpper(name[0]) + name.Substring(1).ToLower();
+	// ---------------------------------
+	// Validation
+	private EditContext? editContext;
+	private bool formInvalid = true;
+
+	private void HandleFieldChanged(object? sender, FieldChangedEventArgs e)
+	{
+		if (editContext is not null)
+		{
+			if (question.Title is not null &&
+				question.Text is not null &&
+				question.Username is not null &&
+				SubjectId is not null)
+			{
+				formInvalid = !editContext.Validate();
+				StateHasChanged();
+			}
+			StateHasChanged();
+		}
 	}
+
+	private async Task HandleValidSubmit()
+	{
+		await CreateQuestion();
+	}
+
+	// ---------------------------------
 
 }
