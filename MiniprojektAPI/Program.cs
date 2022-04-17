@@ -1,6 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.Json;
-
+using Microsoft.EntityFrameworkCore;
 using API.Data;
 using Service;
 
@@ -25,7 +24,8 @@ builder.Services.AddSwaggerGen();
 var AllowSomeStuff = "_AllowSomeStuff";
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(name: AllowSomeStuff, builder => {
+    options.AddPolicy(name: AllowSomeStuff, builder =>
+    {
         builder.AllowAnyOrigin()
                .AllowAnyHeader()
                .AllowAnyMethod();
@@ -150,6 +150,12 @@ app.MapGet("/api/answers/{id}/question", async (DataService service, int id) =>
     return await service.GetAnswersByQuestionId(id);
 })
     .WithName("GetAnswers").WithTags("Answers");
+
+app.MapGet("/api/questions/{id}/answers={filter}", async (DataService service, int id, string filter) =>
+{
+    return await service.GetAnswersByFilter(id, filter);
+})
+    .WithName("GetAnswersByFilter").WithTags("Answers");
 
 
 app.MapPost("/api/answers/", async (DataService service, AnswerData data) =>

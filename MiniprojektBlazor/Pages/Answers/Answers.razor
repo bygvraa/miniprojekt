@@ -9,7 +9,7 @@
 }
 else
 {
-	<div class="card-group" style="padding-left: 1rem">
+	<div class="card-group d-block" style="padding-left: 1rem">
 		@foreach (var answer in answers)
 		{
 			<div class="card card-answer bg-lite">
@@ -91,8 +91,8 @@ else
 }
 
 @code {
-	[Parameter]
-	public int QuestionId { get; set; }
+		[Parameter]
+		public int QuestionId { get; set; }
 	private Answer[]? answers;
 	private AnswerData answer = new() { };
 
@@ -107,7 +107,7 @@ else
 
 	private async Task GetAnswers()
 	{
-		answers = await service.GetAnswersById(QuestionId);
+		answers = await service.GetAnswersByFilter(QuestionId, "upvotes");
 	}
 
 	private async Task CreateAnswer()
@@ -123,7 +123,7 @@ else
 		var answer = new AnswerData(a.Id, QuestionId, a.Text, a.Username);
 
 		await service.UpvoteAnswer(answer);
-		await GetAnswers();
+		a.Upvote++;
 	}
 
 	private async Task DownvoteAnswer(Answer a)
@@ -131,7 +131,7 @@ else
 		var answer = new AnswerData(a.Id, QuestionId, a.Text, a.Username);
 
 		await service.DownvoteAnswer(answer);
-		await GetAnswers();
+		a.Downvote++;
 	}
 
 	// ---------------------------------

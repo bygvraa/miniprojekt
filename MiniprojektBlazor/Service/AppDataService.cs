@@ -1,5 +1,4 @@
 using System.Net.Http.Json;
-using System.Text.Json;
 using DataAccess.Data;
 using DataAccess.Models;
 
@@ -63,6 +62,11 @@ public class AppDataService
 
     public async Task<Answer[]?> GetAnswersById(int id) {
         var url = $"{baseAPI}answers/{id}/question";
+        return await http.GetFromJsonAsync<Answer[]>(url);
+    }
+
+    public async Task<Answer[]?> GetAnswersByFilter(int id, string filter) {
+        var url = $"{baseAPI}questions/{id}/answers={filter}";
         return await http.GetFromJsonAsync<Answer[]>(url);
     }
 

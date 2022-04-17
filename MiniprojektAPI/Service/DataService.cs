@@ -1,7 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
-using System;
-
 using API.Data;
 using DataAccess.Models;
 
@@ -117,6 +115,40 @@ public class DataService
             .Where(q => q.Id == questionId)
             .SelectMany(q => q.Answers)
             .ToListAsync();
+    }
+
+    public async Task<List<Answer>> GetAnswersByFilter(int questionId, string filter) {
+        if (filter == "newest")
+        {
+            return await db.Questions
+                .Where(q => q.Id == questionId)
+                .SelectMany(q => q.Answers)
+                .OrderByDescending(a => a.Date)
+                .ToListAsync();
+        }
+        else if (filter == "oldest")
+        {
+            return await db.Questions
+                .Where(q => q.Id == questionId)
+                .SelectMany(q => q.Answers)
+                .OrderBy(a => a.Date)
+                .ToListAsync();
+        }
+        else if (filter == "upvotes")
+        {
+            return await db.Questions
+                .Where(q => q.Id == questionId)
+                .SelectMany(q => q.Answers)
+                .OrderByDescending(a => (a.Upvote - a.Downvote))
+                .ToListAsync();
+        }
+        else
+        {
+            return await db.Questions
+                .Where(q => q.Id == questionId)
+                .SelectMany(q => q.Answers)
+                .ToListAsync();
+        }
     }
 
     public async Task<string> CreateAnswer(int questionId, string text, string username) {
