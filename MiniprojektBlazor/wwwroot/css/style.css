@@ -39,6 +39,11 @@ a {
 .a-link {
     color: #151b73;
 }
+
+.white-space-break {
+    white-space: break-spaces;
+}
+
 /* Custom */
 .rank {
     float: left;

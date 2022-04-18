@@ -48,6 +48,10 @@ namespace DataAccess.Models
                 return $"{Text[..limit]} ...";
         }
 
+        public string GetFullText() {
+            return Text;
+        }
+
         public string GetPrettyName() {
             return char.ToUpper(Username[0]) + Username[1..].ToLower();
         }
