@@ -66,12 +66,12 @@ app.UseStaticFiles(new StaticFileOptions()
 });
 
 // Seeding af data, hvis databasen er tom
-using (var scope = app.Services.CreateScope())
-{
-    // Med 'scope' kan man hente en service.
-    var dataService = scope.ServiceProvider.GetRequiredService<DataService>();
-    dataService.SeedData(); // 'SeedData()' er defineret i 'DataService.cs', og fylder data på databasen, hvis den er tom.
-}
+//using (var scope = app.Services.CreateScope())
+//{
+//    // Med 'scope' kan man hente en service.
+//    var dataService = scope.ServiceProvider.GetRequiredService<DataService>();
+//    dataService.SeedData(); // 'SeedData()' er defineret i 'DataService.cs', og fylder data på databasen, hvis den er tom.
+//}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

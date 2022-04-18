@@ -202,7 +202,10 @@ public class DataService
     /// Seeder noget nyt data i databasen hvis det er nødvendigt.
     /// </summary>
 	public void SeedData() {
-        Subject subject = db.Subjects.FirstOrDefault()!;
+        Subject? subject = db.Subjects
+            .OrderBy(s => s.Id)
+            .FirstOrDefault();
+
         if (subject == null)
         {
             subject = new Subject("Teknisk");
@@ -212,14 +215,20 @@ public class DataService
             db.Subjects.Add(new Subject("Andet"));
         }
 
-        Question question = db.Questions.FirstOrDefault()!;
+        Question? question = db.Questions
+            .OrderBy(q => q.Id)
+            .FirstOrDefault();
+
         if (question == null)
         {
             question = new Question(subject, "Teknisk spørgsmål", "Virker mit spørgsmål?", "Mikkel");
             db.Questions.Add(question);
         }
 
-        Answer answer = db.Answers.FirstOrDefault()!;
+        Answer answer = db.Answers
+            .OrderBy(a => a.Id)
+            .FirstOrDefault()!;
+
         if (answer == null)
         {
             answer = new Answer(question, "Ja, dit spørgsmål virker", "Simon");

@@ -17,9 +17,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
     <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
 
-    <ProjectReference Include="..\MiniprojektBlazor\MiniprojektBlazor.csproj">
-		<Name>MiniprojektBlazor</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\MiniprojektBlazor\MiniprojektBlazor.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace DataAccess.Data
 {
@@ -18,7 +17,7 @@ namespace DataAccess.Data
         public string Title { get; set; }
 
         [Required(ErrorMessage = "Skriv et spørgsmål.")]
-        [Display(Name ="Spørgsmål")]
+        [Display(Name = "Spørgsmål")]
         [StringLength(500, ErrorMessage = "Spørgsmålet skal være på mellem {2} og {1} tegn.", MinimumLength = 2)]
         public string Text { get; set; }
 

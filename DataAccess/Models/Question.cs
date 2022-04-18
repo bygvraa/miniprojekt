@@ -1,5 +1,3 @@
-using System;
-
 namespace DataAccess.Models
 {
     public class Question
@@ -18,8 +16,7 @@ namespace DataAccess.Models
 
         // Konstruktør
         public Question() { }
-        public Question(Subject subject, string title, string text, string username)
-        {
+        public Question(Subject subject, string title, string text, string username) {
             Subject = subject;
             Title = title;
             Text = text;
